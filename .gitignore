@@ -1,0 +1,6 @@
+*.DS_Store
+buildd/
+*Makefile
+*.pro.user
+*.Release
+*.Debug
