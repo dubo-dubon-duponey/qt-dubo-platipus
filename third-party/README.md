@@ -11,8 +11,6 @@ https://github.com/nevyn/SPMediaKeyTap (BSD)
 More about media keys:
 http://overooped.com/post/2593597587/mediakeys
 
-These libraries will be fetched and compiled-in from forks on github (under the same licenses):
+These libraries will be compiled-in from forks on github (under the same licenses):
 https://github.com/dubo-dubon-duponey/apple_remote_control
 https://github.com/dubo-dubon-duponey/SPMediaKeyTap
-
-See bootstrap.sh if you want to change something.

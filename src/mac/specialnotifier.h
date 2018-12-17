@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2018, Dubo Dubon Duponey <dubodubonduponey@gmail.com>
+ * Copyright (c) 2018, Dubo Dubon Duponey <dubodubonduponey+github@pm.me>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -12,12 +12,15 @@
 #ifndef MAC_NOTIFIER_H
 #define MAC_NOTIFIER_H
 
-#include <libduboplatipus/basenotifier.h>
+#include "libduboplatipus/basenotifier.h"
 
+/**
+ * @brief The SpecialNotifier class is an implementation of the virtual BaseNotifier for Mac.
+ */
 class SpecialNotifier : public DuboPlatipus::BaseNotifier
 {
 public:
-    explicit SpecialNotifier(QObject * parent = 0);
+    explicit SpecialNotifier(QObject * parent = nullptr);
 
     bool notify(const QString &appName, const QString &title, const QString &subtitle, const QString &text, const QIcon & icon = QIcon(), int time = 10000);
     bool canNotify();

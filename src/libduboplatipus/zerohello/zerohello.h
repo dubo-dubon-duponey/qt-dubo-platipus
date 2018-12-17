@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2018, Dubo Dubon Duponey <dubodubonduponey@gmail.com>
+ * Copyright (c) 2018, Dubo Dubon Duponey <dubodubonduponey+github@pm.me>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -12,14 +12,14 @@
 #ifndef DUBOPLATIPUS_ZEROHELLO_ZERO_H
 #define DUBOPLATIPUS_ZEROHELLO_ZERO_H
 
-#include "libduboplatipus/libduboplatipus_global.h"
+#include "libduboplatipus/global.h"
+#include "libduboplatipus/zerohello/record.h"
 
 #include <QObject>
 #include <QVariant>
 #include <QVariantList>
 #include <QStringList>
 #include <QtNetwork/QHostInfo>
-#include "libduboplatipus/zerohello/record.h"
 
 namespace DuboPlatipus {
 
@@ -29,7 +29,7 @@ class LIBDUBOPLATIPUSSHARED_EXPORT ZeroHello : public QObject
 {
     Q_OBJECT
 public:
-    explicit ZeroHello(QObject * parent = 0);
+    explicit ZeroHello(QObject * parent = nullptr);
     Q_INVOKABLE void registerService(const QString &name, const QString &regType, int port, const QString &domain);
     Q_INVOKABLE void resolve(const QString &name, const QString &regType, const QString &domain);
     Q_INVOKABLE void browse(const QString & serviceType);

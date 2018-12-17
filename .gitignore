@@ -4,3 +4,4 @@ buildd/
 *.pro.user
 *.Release
 *.Debug
+/.qmake.stash

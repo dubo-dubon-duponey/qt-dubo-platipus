@@ -6,13 +6,13 @@
 #import "SPMediaKeyTap.h"
 
 @interface SPMediaKeyTapExampleAppDelegate : NSObject <NSApplicationDelegate> {
-@public
-    DuboPlatipus::MediaKeys::MediaKeys * mk;
 }
-
+@property (atomic) DuboPlatipus::MediaKeys * mk;
 @end
 
-@implementation SPMediaKeyTapExampleAppDelegate
+@implementation SPMediaKeyTapExampleAppDelegate{
+}
+
 -(void)mediaKeyTap:(SPMediaKeyTap*)keyTap receivedMediaKeyEvent:(NSEvent*)event
 {
     #pragma unused (keyTap)
@@ -25,10 +25,10 @@
 
     if (keyIsPressed) {
         NSLog(@"Down");
-        mk->hello(keyCode, keyRepeat, false);
+        self.mk->hello(keyCode, keyRepeat, false);
     }else{
         NSLog(@"Up");
-        mk->hello(keyCode, keyRepeat, true);
+        self.mk->hello(keyCode, keyRepeat, true);
     }
 //        NSString *debugString = [NSString stringWithFormat:@"%@", keyRepeat?@", repeated.":@"."];
 //        switch (keyCode) {
@@ -70,7 +70,7 @@ QObject(parent)
     d = new DuboPlatipus::MediaKeys::Private();
     CocoaInitializer initializer;
     d->delegate = [SPMediaKeyTapExampleAppDelegate alloc];
-    d->delegate->mk = this;
+    d->delegate.mk = this;
     [[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithObjectsAndKeys:
         [SPMediaKeyTap defaultMediaKeyUserBundleIdentifiers], kMediaKeyUsingBundleIdentifiersDefaultsKey,
     nil]];

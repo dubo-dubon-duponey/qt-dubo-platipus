@@ -1,6 +1,6 @@
 TEMPLATE    = subdirs
 CONFIG      = ordered
-SUBDIRS     = third-party src doc demo
+SUBDIRS     = src demo doc
 OTHER_FILES +=  res/redist/AUTHORS \
                 res/redist/ChangeLog \
                 res/redist/LICENSE.BSD2 \
@@ -8,4 +8,4 @@ OTHER_FILES +=  res/redist/AUTHORS \
                 mac.pri \
                 win.pri \
                 other.pri \
-                README
+                README.md

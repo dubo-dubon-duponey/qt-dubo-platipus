@@ -8,7 +8,7 @@ class PowerManagementMac : public DuboPlatipus::BasePowerManagement
 {
     Q_OBJECT
 public:
-    explicit PowerManagementMac(QObject * parent = 0);
+    explicit PowerManagementMac(QObject * parent = nullptr);
     ~PowerManagementMac();
 
     void setState(const uint /* busy */, const QString & /*reason*/ );

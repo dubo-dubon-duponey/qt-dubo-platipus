@@ -1,3 +1,9 @@
 [submodule "config"]
 	path = config
 	url = https://github.com/dubo-dubon-duponey/qt-dubo-qmakeitup
+[submodule "third-party/SPMediaKeyTap"]
+	path = third-party/SPMediaKeyTap
+	url = https://github.com/dubo-dubon-duponey/SPMediaKeyTap.git
+[submodule "third-party/apple_remote_control"]
+	path = third-party/apple_remote_control
+	url = https://github.com/dubo-dubon-duponey/apple_remote_control

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2018, Dubo Dubon Duponey <dubodubonduponey@gmail.com>
+ * Copyright (c) 2018, Dubo Dubon Duponey <dubodubonduponey+github@pm.me>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -12,7 +12,7 @@
 #ifndef DUBOPLATIPUS_NOTIFIER_H
 #define DUBOPLATIPUS_NOTIFIER_H
 
-#include "libduboplatipus/libduboplatipus_global.h"
+#include "libduboplatipus/global.h"
 #include "libduboplatipus/basenotifier.h"
 
 #include <QSystemTrayIcon>
@@ -25,7 +25,7 @@ class LIBDUBOPLATIPUSSHARED_EXPORT Notifier : public QObject
   Q_OBJECT
 
 public:
-    explicit Notifier(QObject * parent = 0, QSystemTrayIcon * tray = 0);
+    explicit Notifier(QObject * parent = nullptr, QSystemTrayIcon * tray = 0);
 
     Q_PROPERTY(int APP READ APP)
     static int APP(){return QSystemTrayIcon::NoIcon;}

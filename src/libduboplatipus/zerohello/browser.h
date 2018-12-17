@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2018, Dubo Dubon Duponey <dubodubonduponey@gmail.com>
+ * Copyright (c) 2018, Dubo Dubon Duponey <dubodubonduponey+github@pm.me>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -12,7 +12,7 @@
 #ifndef DUBOPLATIPUS_ZEROHELLO_BROWSER_H
 #define DUBOPLATIPUS_ZEROHELLO_BROWSER_H
 
-#include "libduboplatipus/libduboplatipus_global.h"
+#include "libduboplatipus/global.h"
 #include "libduboplatipus/zerohello/genericzero.h"
 #include "libduboplatipus/zerohello/record.h"
 #include "libduboplatipus/zerohello/resolver.h"
@@ -31,7 +31,7 @@ class LIBDUBOPLATIPUSSHARED_EXPORT Browser : public GenericZero
 {
     Q_OBJECT
 public:
-    explicit Browser(QObject *parent = 0);
+    explicit Browser(QObject * parent = nullptr);
 
     /*! \brief Call this to start browsing for serviceType */
     Q_INVOKABLE void browse(const QString &serviceType);

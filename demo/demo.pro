@@ -12,13 +12,13 @@ contains(DUBO_LINK_TYPE, static){
     DEFINES += LIBDUBOPLATIPUS_USE_STATIC
 }
 
+SOURCES += $$PWD/main.cpp
+
 # Shitty right now
 #win32{
 #    INCLUDEPATH += C:\somewhere\trees\bonjour\include
 #    LIBS += -LC:\somewhere\trees\bonjour\lib
 #}
-
-SOURCES += $$PWD/main.cpp
 
 HEADERS += zero.h
 

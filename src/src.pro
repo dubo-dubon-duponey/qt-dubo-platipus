@@ -24,7 +24,7 @@ SOURCES +=  $$PWD/root.cpp\
             $$PWD/zerohello/genericzero.cpp \
             $$PWD/zerohello/zerohello.cpp
 
-HEADERS +=  $$PWD/lib$${TARGET}/libduboplatipus_global.h \
+HEADERS +=  $$PWD/lib$${TARGET}/global.h \
             $$PWD/lib$${TARGET}/root.h \
             $$PWD/lib$${TARGET}/lesserwindow.h \
             $$PWD/lib$${TARGET}/apputils.h \
@@ -33,7 +33,6 @@ HEADERS +=  $$PWD/lib$${TARGET}/libduboplatipus_global.h \
             $$PWD/lib$${TARGET}/basepowermanagement.h \
             $$PWD/lib$${TARGET}/basenotifier.h \
             $$PWD/lib$${TARGET}/powermanager.h \
-#            $$PWD/lib$${TARGET}/QT425.h \
             $$PWD/lib$${TARGET}/notifier.h \
             $$PWD/lib$${TARGET}/zerohello/browser.h \
             $$PWD/lib$${TARGET}/zerohello/record.h \

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2018, Dubo Dubon Duponey <dubodubonduponey@gmail.com>
+ * Copyright (c) 2018, Dubo Dubon Duponey <dubodubonduponey+github@pm.me>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -17,6 +17,26 @@
 #include <QCoreApplication>
 #include <QTemporaryFile>
 #include <QImageWriter>
+#include <QDebug>
+
+/*
+- (IBAction)showNotification:(id)sender{
+NSUserNotification *notification = [[NSUserNotification alloc] init];
+
+notification.responsePlaceholder = @"Reply";
+notification.hasReplyButton = true;
+
+[[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification];
+}
+
+- (void)userNotificationCenter:(NSUserNotificationCenter *)center didActivateNotification:(NSUserNotification *)notification
+{
+    if (notification.activationType == NSUserNotificationActivationTypeReplied){
+        NSString* userResponse = notification.response.string;
+    }
+}
+
+*/
 
 SpecialNotifier::SpecialNotifier(QObject * parent): BaseNotifier(parent)
 {
@@ -72,18 +92,6 @@ bool SpecialNotifier::canNotify()
     return false;
 }
 
-void SpecialNotifier::sendAppleScript(const QString &script) {
-    QByteArray utf8 = script.toUtf8();
-    char* cString = (char *)utf8.constData();
-    NSString *scriptApple = [[NSString alloc] initWithUTF8String:cString];
-
-    NSAppleScript *as = [[NSAppleScript alloc] initWithSource:scriptApple];
-    NSDictionary *err = nil;
-    [as executeAndReturnError:&err];
-    [as release];
-    [scriptApple release];
-}
-
 void SpecialNotifier::notifyCenter(const QString &title, const QString &subtitle, const QString &text)
 {
     id userNotificationCenterClass = NSClassFromString(@"NSUserNotificationCenter");
@@ -106,12 +114,53 @@ void SpecialNotifier::notifyCenter(const QString &title, const QString &subtitle
     [userNotification setValue:subtitleMac forKey:@"subtitle"];
     [userNotification setValue:textMac forKey:@"informativeText"];
 
+//    if ([userNotification respondsToSelector:NSSelectorFromString(@"contentImage")]){
+        NSString *responsePlaceholder = @"foobar";// [[NSString alloc] initWithUTF8String:@"foobar"];
+//        NSAttributedString * response = @"foobar";
+        NSMutableAttributedString * response = [[NSMutableAttributedString alloc] initWithString:@"firstsecondthird"];
+        [userNotification setValue:@(false) forKey:@"hasReplyButton"];
+        [userNotification setValue:response forKey:@"response"];
+        [userNotification setValue:responsePlaceholder forKey:@"responsePlaceholder"];
+
+/*
+        - (void)userNotificationCenter:(NSUserNotificationCenter *)center didActivateNotification:(NSUserNotification *)notification
+        {
+            if (notification.activationType == NSUserNotificationActivationTypeReplied){
+                NSString* userResponse = notification.response.string;
+            }
+        }
+*/
+        //    }
+
+/*
+    contentImage;
+    identifier;
+    response;
+    responsePlaceholder
+*/
+
     [[userNotificationCenterClass performSelector:@selector(defaultUserNotificationCenter)] performSelector:@selector(deliverNotification:) withObject:userNotification];
 
     [titleMac release];
     [textMac release];
     [userNotification release];
+
+
+
+/*
+    NSUserNotification* notification = [[NSUserNotification alloc] init];
+    notification.title = title.toNSString();
+    notification.subtitle = subtitle.toNSString();
+    notification.informativeText = message.toNSString();
+    notification.soundName = NSUserNotificationDefaultSoundName;   //Will play a default sound
+    [[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification: notification];
+    [notification autorelease];*/
+
 }
+
+
+
+
 
 void SpecialNotifier::notifyGrowl(const QString & growlApp, const QString &appName, const QString &title, const QString &text, const QIcon &icon)
 {
@@ -155,4 +204,16 @@ void SpecialNotifier::notifyGrowl(const QString & growlApp, const QString &appNa
     quotedTitle.replace("\\", "\\\\").replace("\"", "\\");
     quotedText.replace("\\", "\\\\").replace("\"", "\\");
     this->sendAppleScript(script.arg(notificationApp, quotedTitle, quotedText, notificationIcon, growlApp));
+}
+
+void SpecialNotifier::sendAppleScript(const QString &script) {
+    QByteArray utf8 = script.toUtf8();
+    char* cString = (char *)utf8.constData();
+    NSString *scriptApple = [[NSString alloc] initWithUTF8String:cString];
+
+    NSAppleScript *as = [[NSAppleScript alloc] initWithSource:scriptApple];
+    NSDictionary *err = nil;
+    [as executeAndReturnError:&err];
+    [as release];
+    [scriptApple release];
 }

@@ -11,7 +11,7 @@ class PowerManagementNux : public DuboPlatipus::BasePowerManagement
 {
     Q_OBJECT
 public:
-    explicit PowerManagementNux(QObject *parent = 0);
+    explicit PowerManagementNux(QObject * parent = nullptr);
 //    ~PowerManagementNux();
     Q_INVOKABLE void setState(const uint busy, const QString & reason);
 

@@ -12,7 +12,7 @@ class Zero : public QObject
 {
     Q_OBJECT
 public:
-    explicit Zero(QObject *parent = 0);
+    explicit Zero(QObject * parent = nullptr);
     
 signals:
 

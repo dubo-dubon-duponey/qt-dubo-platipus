@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2018, Dubo Dubon Duponey <dubodubonduponey@gmail.com>
+ * Copyright (c) 2018, Dubo Dubon Duponey <dubodubonduponey+github@pm.me>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -12,7 +12,7 @@
 #ifndef DUBOPLATIPUS_POWERMANAGER_H
 #define DUBOPLATIPUS_POWERMANAGER_H
 
-#include "libduboplatipus/libduboplatipus_global.h"
+#include "libduboplatipus/global.h"
 #include <QObject>
 #include "libduboplatipus/basepowermanagement.h"
 
@@ -21,7 +21,7 @@ namespace DuboPlatipus
 //class LIBDUBOPLATIPUSSHARED_EXPORT PowerManager: public QObject {
 //    Q_OBJECT
 //public:
-//    static DuboPlatipus::BasePowerManagement * getManager(QObject * parent = 0);
+//    static DuboPlatipus::BasePowerManagement * getManager(QObject * parent = nullptr);
 
 //signals:
     
@@ -33,7 +33,7 @@ class LIBDUBOPLATIPUSSHARED_EXPORT PowerManager : public QObject
   Q_OBJECT
 
 public:
-    PowerManager(QObject * parent = 0);
+    PowerManager(QObject * parent = nullptr);
 
     Q_PROPERTY(uint state READ getState)
 

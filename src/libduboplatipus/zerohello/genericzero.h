@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2018, Dubo Dubon Duponey <dubodubonduponey@gmail.com>
+ * Copyright (c) 2018, Dubo Dubon Duponey <dubodubonduponey+github@pm.me>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -12,7 +12,7 @@
 #ifndef GENERICZERO_H
 #define GENERICZERO_H
 
-#include "libduboplatipus/libduboplatipus_global.h"
+#include "libduboplatipus/global.h"
 #include <QObject>
 
 #include <QSocketNotifier>
@@ -26,7 +26,7 @@ class LIBDUBOPLATIPUSSHARED_EXPORT GenericZero : public QObject
 {
     Q_OBJECT
 public:
-    explicit GenericZero(QObject *parent = 0);
+    explicit GenericZero(QObject * parent = nullptr);
     ~GenericZero();
     
 signals:

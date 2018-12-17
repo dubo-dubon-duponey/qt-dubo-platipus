@@ -7,7 +7,7 @@ class PowerManagementWindows : public DuboPlatipus::BasePowerManagement
 {
     Q_OBJECT
 public:
-    explicit PowerManagementWindows(QObject *parent = 0);
+    explicit PowerManagementWindows(QObject * parent = nullptr);
 //    ~PowerManagementWindows();
     void setState(const uint busy, const QString & reason);
 
