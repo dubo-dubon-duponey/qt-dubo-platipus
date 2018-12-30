@@ -1,4 +1,4 @@
-# Platipus
+# DuboPlatipus
 
 This library is meant to provide functionalities and fixes that QT doesn't.
 As such it contains chunks of platform dependent code.

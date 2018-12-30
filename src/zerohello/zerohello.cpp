@@ -39,7 +39,6 @@ void ZeroHello::browse(const QString &serviceType)
     connect(browser, SIGNAL(changed(const QList<Record>)), this, SLOT(newAnnounceSlot(const QList<Record>)));
 }
 
-//http://steveire.files.wordpress.com/2011/03/funny-pictures-kitten-teaches-friend_large.jpg
 void ZeroHello::resolve(const QString &name, const QString &regType, const QString &domain)
 {
     Resolver * r = new Resolver(this);
