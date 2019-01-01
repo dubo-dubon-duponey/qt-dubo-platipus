@@ -17,7 +17,6 @@ copyToDestdir($$PWD/../res/redist/*, $$DESTDIR/../share/lib$${TARGET})
 
 SOURCES +=  $$PWD/root.cpp\
             $$PWD/powermanager.cpp \
-            $$PWD/notifier.cpp \
             $$PWD/zerohello/browser.cpp \
             $$PWD/zerohello/registrar.cpp \
             $$PWD/zerohello/resolver.cpp \
@@ -31,9 +30,7 @@ HEADERS +=  $$PWD/lib$${TARGET}/global.h \
             $$PWD/lib$${TARGET}/merguez.h \
             $$PWD/lib$${TARGET}/mediakeys.h \
             $$PWD/lib$${TARGET}/basepowermanagement.h \
-            $$PWD/lib$${TARGET}/basenotifier.h \
             $$PWD/lib$${TARGET}/powermanager.h \
-            $$PWD/lib$${TARGET}/notifier.h \
             $$PWD/lib$${TARGET}/zerohello/browser.h \
             $$PWD/lib$${TARGET}/zerohello/record.h \
             $$PWD/lib$${TARGET}/zerohello/registrar.h \
@@ -64,8 +61,6 @@ unix:!mac{
     # Released under the GPL with an exception clause for OpenSSL
     HEADERS += $$PWD/nux/powermanagementnux.h
     SOURCES += $$PWD/nux/powermanagementnux.cpp
-    HEADERS += $$PWD/nux/specialnotifier.h
-    SOURCES += $$PWD/nux/specialnotifier.cpp
 
     SOURCES += $$PWD/nux/apputils.cpp
     SOURCES += $$PWD/nux/merguez.cpp
@@ -105,7 +100,6 @@ mac{
 #    INCLUDEPATH += $$PWD/mac
 
     HEADERS += $$PWD/mac/powermanagementmac.h
-    HEADERS += $$PWD/mac/specialnotifier.h
 
     # Cocoa helper
     HEADERS +=              $$PWD/mac/cocoainit.h
@@ -118,6 +112,4 @@ mac{
     OBJECTIVE_SOURCES +=    $$PWD/mac/lesserwindow.mm
 
     SOURCES += $$PWD/mac/powermanagementmac.cpp
-
-    OBJECTIVE_SOURCES += $$PWD/../src/mac/specialnotifier.mm
 }
