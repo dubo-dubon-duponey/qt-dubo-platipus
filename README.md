@@ -1,5 +1,11 @@
 # DuboPlatipus
 
+> "Dubo Components" are lightweight, targeted c++ libraries meant for QT applications.
+> They aim at providing *simple to use* interfaces for a range of functionality
+(notification, crash reporting, zero conf, application update, torrent, etc).
+> Fully scriptable, they are primarily meant for javascript (from a QWebEngine) - thought they are usable as well in plain QT.
+> Put together, these components should provide a comprehensive foundation for these building a "WebRunner", similarly to Electron.
+
 This library is meant to provide functionalities and fixes that QT doesn't.
 As such it contains chunks of platform dependent code.
 If something can be done using simply QT APIs, then it shouldn't be here.
