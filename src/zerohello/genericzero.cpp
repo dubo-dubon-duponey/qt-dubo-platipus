@@ -16,7 +16,7 @@ namespace ZeroHello{
 
 
 GenericZero::GenericZero(QObject *parent) :
-    QObject(parent), dnssref(0), bonjourSocket(0)
+    QObject(parent), dnssref(nullptr), bonjourSocket(nullptr)
 {
 }
 
@@ -24,7 +24,7 @@ GenericZero::~GenericZero()
 {
     if (dnssref) {
         DNSServiceRefDeallocate(dnssref);
-        dnssref = 0;
+        dnssref = nullptr;
     }
 }
 

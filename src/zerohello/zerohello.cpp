@@ -24,7 +24,7 @@ void ZeroHello::registerService(const QString &name, const QString &regType, int
     // Create our record (name+hostname+port, type)
     Record ourselves = Record(name + " (" + QHostInfo::localHostName() + ")", regType, domain);
     // And register ourselves
-    registrar->registerService(ourselves, port);
+    registrar->registerService(ourselves, static_cast<quint16>(port));
     // Connect to be notified that registration went through
     connect(registrar, SIGNAL(registered(const Record &)), this, SLOT(registeredSlot(const Record &)));
 }

@@ -32,7 +32,7 @@ void Resolver::resolve(const Record &record)
                 record.serviceName.toUtf8().constData(),
                 record.registeredType.toUtf8().constData(),
                 record.replyDomain.toUtf8().constData(),
-                (DNSServiceResolveReply) replyHandler,
+                static_cast<DNSServiceResolveReply>(replyHandler),
                 this
                 );
 
@@ -57,7 +57,7 @@ void Resolver::replyHandler(
     }
 
 #if Q_BYTE_ORDER == Q_LITTLE_ENDIAN
-    port = ((port & 0x00ff) << 8) | ((port & 0xff00) >> 8);
+    port = static_cast<quint16>(((port & 0x00ff) << 8) | ((port & 0xff00) >> 8));
 #endif
     resolver->bonjourPort = port;
     QHostInfo::lookupHost(QString::fromUtf8(hostTarget), resolver, SLOT(finishConnect(const QHostInfo &)));

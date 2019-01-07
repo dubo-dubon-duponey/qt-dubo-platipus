@@ -28,7 +28,7 @@ void Registrar::registerService(const Record &record, quint16 servicePort)
 
     quint16 bigEndianPort = servicePort;
 #if Q_BYTE_ORDER == Q_LITTLE_ENDIAN
-    bigEndianPort = ((servicePort & 0x00ff) << 8) | ((servicePort & 0xff00) >> 8);
+    bigEndianPort = static_cast<quint16>(((servicePort & 0x00ff) << 8) | ((servicePort & 0xff00) >> 8));
 #endif
     // Call register
     DNSServiceErrorType err = DNSServiceRegister(
@@ -37,11 +37,11 @@ void Registrar::registerService(const Record &record, quint16 servicePort)
                 0,
                 record.serviceName.toUtf8().constData(),
                 record.registeredType.toUtf8().constData(),
-                record.replyDomain.isEmpty() ? 0 : record.replyDomain.toUtf8().constData(),
-                0,
+                record.replyDomain.isEmpty() ? nullptr : record.replyDomain.toUtf8().constData(),
+                nullptr,
                 bigEndianPort,
                 0,
-                0,
+                nullptr,
                 registerHandler,
                 this
                 );

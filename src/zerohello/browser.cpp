@@ -28,7 +28,7 @@ void Browser::browse(const QString &serviceType)
                 0,
                 0,
                 serviceType.toUtf8().constData(),
-                0,
+                nullptr,
                 browseHandler,
                 this
                 );
