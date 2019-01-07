@@ -1,7 +1,7 @@
 #include "powermanagementwindows.h"
 
 #include <Windows.h>
-#include <QtCore/qdebug.h>
+#include <QDebug>
 
 PowerManagementWindows::PowerManagementWindows(QObject *parent) :
     BasePowerManagement(parent)

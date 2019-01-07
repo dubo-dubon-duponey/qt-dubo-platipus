@@ -1,6 +1,6 @@
 #include "powermanagementnux.h"
 
-#include <QtCore/qdebug.h>
+#include <QDebug>
 
 #include <QDBusConnection>
 #include <QDBusMessage>

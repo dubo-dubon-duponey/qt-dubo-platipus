@@ -14,7 +14,7 @@
 
 #include "libduboplatipus/global.h"
 #include <QObject>
-#include <QtCore/qdebug.h>
+#include <QDebug>
 
 namespace DuboPlatipus {
 

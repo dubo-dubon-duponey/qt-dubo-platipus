@@ -41,7 +41,8 @@ void OutputLibraryInfo(){
 void bitchMe()
 {
     // Will bump the dock icon if the app is in the background to attract user attention
-    DuboPlatipus::AppUtils::bitchMe();
+    DuboPlatipus::AppUtils * q = new DuboPlatipus::AppUtils();
+    q->bitchMe();
 }
 
 int main(int argc, char *argv[])
@@ -70,16 +71,11 @@ int main(int argc, char *argv[])
     /**
      * AppUtils
      */
-    DuboPlatipus::AppUtils * a;
-
     // Adds a dock icon badge
-    DuboPlatipus::AppUtils::badgeMe("Badge!");
+    DuboPlatipus::AppUtils::badgeMe("Badge ∞!");
 
     // See the method above
     QTimer::singleShot(5000, bitchMe);
-
-    qDebug() << "Has custom fullscreen:";
-    qDebug() << DuboPlatipus::AppUtils::hasCustomFullscreen(view);
 
     qDebug() << "Is fullscreen:";
     qDebug() << DuboPlatipus::AppUtils::isFullScreen(view);
@@ -103,10 +99,10 @@ int main(int argc, char *argv[])
     DuboPlatipus::PowerManager * b = new DuboPlatipus::PowerManager();
     qDebug() << b->getState();
 
-    DuboPlatipus::LesserWindow * c;
-    DuboPlatipus::MediaKeys * d;
-    DuboPlatipus::RemoteMerguez * e;
-    DuboPlatipus::PowerManager * f;
+    DuboPlatipus::LesserWindow * c = new DuboPlatipus::LesserWindow();
+    DuboPlatipus::MediaKeys * d = new DuboPlatipus::MediaKeys(view);
+    DuboPlatipus::RemoteMerguez * e = new DuboPlatipus::RemoteMerguez(view);
+    DuboPlatipus::PowerManager * f = new DuboPlatipus::PowerManager();
     qDebug() << QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
 
 

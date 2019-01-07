@@ -51,7 +51,7 @@ public:
     /*! \brief The type of the library (static / dynamic).*/
     Q_PROPERTY(const QString LINK READ getLinkType CONSTANT)
     /*! \brief QT Version used to build.*/
-    Q_PROPERTY(const QString QT READ getQt)
+    Q_PROPERTY(const QString QT READ getQt CONSTANT)
 
     /*! \brief The nameof the underlying updater library.*/
     Q_PROPERTY(const QString PLUGIN_NAME READ getLibName CONSTANT)

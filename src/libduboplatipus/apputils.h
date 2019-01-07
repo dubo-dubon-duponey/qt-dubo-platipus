@@ -25,9 +25,8 @@ class LIBDUBOPLATIPUSSHARED_EXPORT AppUtils: public QObject {
 public:
 
     static void badgeMe(const QString &text);
-    static void bitchMe();
+    Q_INVOKABLE void bitchMe();
 
-    static bool hasCustomFullscreen(QWidget * mainWindow);
     static bool isFullScreen(QWidget * mainWindow);
     static bool fullscrenToggle(QWidget * mainWindow);
 

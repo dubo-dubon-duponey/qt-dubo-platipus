@@ -150,7 +150,7 @@ int LesserWindow::x() const
 {
     NSView *nsview = (NSView *) this->winId();
     NSWindow *nswindow = [nsview window];
-    return [nswindow frame].origin.x;
+    return static_cast<int>([nswindow frame].origin.x);
 }
 
 void LesserWindow::move(int x, int y)
@@ -175,7 +175,7 @@ void LesserWindow::move(int x, int y)
 int LesserWindow::y() const
 {
     NSView *nsview = (NSView *) this->winId();
-    return ([[NSScreen mainScreen] frame].size.height - [[nsview window] frame].origin.y - [[nsview window] frame].size.height);
+    return static_cast<int>([[NSScreen mainScreen] frame].size.height - [[nsview window] frame].origin.y - [[nsview window] frame].size.height);
 }
 
 bool LesserWindow::minimizeOnDoubleClick() const

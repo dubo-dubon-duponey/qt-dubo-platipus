@@ -7,15 +7,16 @@
 
 @class AppleRemote;
 @interface SaucisseMain : NSObject {
-    RemoteControl* remoteControl;
-    DuboPlatipus::RemoteMerguez* memere;
 //	MultiClickRemoteBehavior* remoteBehavior;
 //	IBOutlet NSView*		feedbackView;
 //	IBOutlet NSTextField*	feedbackText;
 }
 
-- (RemoteControl*) remoteControl;
-- (void) setRemoteControl: (RemoteControl*) newControl;
+@property (atomic) RemoteControl* remoteControl;
+@property (atomic) DuboPlatipus::RemoteMerguez* memere;
+
+//- (RemoteControl*) remoteControl;
+//- (void) setRemoteControl: (RemoteControl*) newControl;
 
 - (void) setupBase: (DuboPlatipus::RemoteMerguez *) merguez;
 - (void) start;
@@ -23,30 +24,36 @@
 
 @end
 
-@implementation SaucisseMain
+@implementation SaucisseMain{
+
+}
+/*
 - (void) dealloc {
-    [remoteControl autorelease];
-    [memere autorelease];
+    [self.remoteControl autorelease];
+    [self.memere autorelease];
     [super dealloc];
 }
-
+*/
 // implementation file
 - (void) sendRemoteButtonEvent: (RemoteControlEventIdentifier) event
                    pressedDown: (BOOL) pressedDown
                    remoteControl: (RemoteControl*) remoteControl
 {
     #pragma unused (remoteControl)
-    memere->hello(event, pressedDown);
+    self.memere->hello(event, pressedDown);
 }
 
 -(void) setupBase: (DuboPlatipus::RemoteMerguez *) merguez
  {
-    memere = merguez;
+    self.memere = merguez;
 
+    self.remoteControl = [[[AppleRemote alloc] initWithDelegate: self] autorelease];
+    [self.remoteControl setDelegate: self];
+/*
     AppleRemote* newRemoteControl = [[[AppleRemote alloc] initWithDelegate: self] autorelease];
     [newRemoteControl setDelegate: self];
     [self setRemoteControl: newRemoteControl];
-
+*/
     //	// OPTIONAL CODE
 //	// The MultiClickRemoteBehavior adds extra functionality.
 //	// It works like a middle man between the delegate and the remote control
@@ -57,23 +64,24 @@
 }
 
 // for bindings access
+/*
 - (RemoteControl*) remoteControl {
-    return remoteControl;
+    return self.remoteControl;
 }
 - (void) setRemoteControl: (RemoteControl*) newControl {
-    [remoteControl autorelease];
-    remoteControl = [newControl retain];
+    [self.remoteControl autorelease];
+    self.remoteControl = [newControl retain];
 }
-
+*/
 
 -(void) start
  {
-    [remoteControl startListening: self];
+    [self.remoteControl startListening: self];
  }
 
 -(void) stop
  {
-    [remoteControl stopListening: self];
+    [self.remoteControl stopListening: self];
  }
 @end
 

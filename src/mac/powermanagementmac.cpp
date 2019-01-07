@@ -1,6 +1,6 @@
 #include "powermanagementmac.h"
 
-#include <QtCore/qdebug.h>
+#include <QDebug>
 
 PowerManagementMac::PowerManagementMac(QObject *parent) :
     BasePowerManagement(parent), m_assertionID(0)
@@ -35,9 +35,10 @@ void PowerManagementMac::setState(const uint busy, const QString & reason)
         m_assertionID = 0;
     }
 
-    CFStringRef reasonForActivity = CFStringCreateWithCString(NULL, reason.toStdString().c_str(), kCFStringEncodingUTF8);
+    CFStringRef reasonForActivity = CFStringCreateWithCString(nullptr, reason.toStdString().c_str(), kCFStringEncodingUTF8);
 
     // kIOPMAssertionTypePreventSystemSleep - general system sleep prevention (dark wake)
+    success = kIOReturnError;
     switch(busy){
     case BasePowerManagement::SYSTEM:
         success = IOPMAssertionCreateWithName(kIOPMAssertionTypePreventUserIdleSystemSleep, kIOPMAssertionLevelOn, reasonForActivity, &m_assertionID);
@@ -46,9 +47,6 @@ void PowerManagementMac::setState(const uint busy, const QString & reason)
         success = IOPMAssertionCreateWithName(kIOPMAssertionTypePreventUserIdleDisplaySleep, kIOPMAssertionLevelOn, reasonForActivity, &m_assertionID);
         break;
     case BasePowerManagement::NONE:
-        break;
-    default:
-        success = kIOReturnError;
         break;
     }
     if(success != kIOReturnSuccess){

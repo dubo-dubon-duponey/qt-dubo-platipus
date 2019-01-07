@@ -8,17 +8,11 @@
 
 #include <QDebug>
 
-#define OSX_SNOW_LEOPARD (NSAppKitVersionNumber < 1115 && NSAppKitVersionNumber >= 1038)
-#define OSX_LION NSAppKitVersionNumber >= 1115.2
-
 namespace DuboPlatipus {
 
 void AppUtils::badgeMe(const QString &text)
 {
-    const char *utf8String = text.toUtf8().constData();
-    NSString *cocoaString = [[NSString alloc] initWithUTF8String:utf8String];
-    [[NSApp dockTile] setBadgeLabel:cocoaString];
-    [cocoaString release];
+    [[NSApp dockTile] setBadgeLabel:text.toNSString()];
 }
 
 void AppUtils::bitchMe()
@@ -26,105 +20,62 @@ void AppUtils::bitchMe()
     [NSApp requestUserAttention:NSCriticalRequest];
 }
 
-bool AppUtils::hasCustomFullscreen(QWidget * mainWindow)
-{
-#ifndef PLATIPUS_FULLSCREEN
-    return false;
-#endif
-    NSView *nsview = (NSView *) mainWindow->winId();
-    NSWindow *nswindow = [nsview window];
-    return [nswindow respondsToSelector:@selector(toggleFullScreen:)];
-}
-
 bool AppUtils::isFullScreen(QWidget * mainWindow)
 {
-#ifndef PLATIPUS_FULLSCREEN
-    return mainWindow->isFullScreen();
-#endif
-    NSView *nsview = (NSView *) mainWindow->winId();
-    NSWindow *nswindow = [nsview window];
-    if([nswindow respondsToSelector:@selector(toggleFullScreen:)]){
-        bool result;
-        NSUInteger masks = [nswindow styleMask];
-        result = masks & NSFullScreenWindowMask;
-        return result;
-    }else{
-        return mainWindow->isFullScreen();
-    }
+    NSView * nsview = reinterpret_cast<NSView *>(mainWindow->winId());
+    NSWindow * nswindow = [nsview window];
+    return [nswindow styleMask] & NSFullScreenWindowMask;
 }
 
 bool AppUtils::fullscrenToggle(QWidget * mainWindow)
 {
-#ifndef PLATIPUS_FULLSCREEN
-    if(!mainWindow->isFullScreen()){
-        mainWindow->showFullScreen();
-    }
-    else if(mainWindow->isMaximized())
-        mainWindow->showMaximized();
-    else
-        mainWindow->showNormal();
-    return mainWindow->isFullScreen();
-#endif
-    NSView *nsview = (NSView *) mainWindow->winId();
-    NSWindow *nswindow = [nsview window];
-    if([nswindow respondsToSelector:@selector(toggleFullScreen:)]){
-        NSWindowCollectionBehavior behavior = [nswindow collectionBehavior];
-        behavior |= NSWindowCollectionBehaviorFullScreenPrimary;
-        [nswindow setCollectionBehavior:behavior];
-        [nswindow toggleFullScreen:nil];
-        bool result;
-        NSUInteger masks = [nswindow styleMask];
-        result = masks & NSFullScreenWindowMask;
-        return result;
-    }else{
-        if(!mainWindow->isFullScreen())
-            mainWindow->showFullScreen();
-        else if(mainWindow->isMaximized())
-            mainWindow->showMaximized();
-        else
-            mainWindow->showNormal();
-        return mainWindow->isFullScreen();
-    }
+    NSView * nsview = reinterpret_cast<NSView *>(mainWindow->winId());
+    NSWindow * nswindow = [nsview window];
+    NSWindowCollectionBehavior behavior = [nswindow collectionBehavior];
+    behavior |= NSWindowCollectionBehaviorFullScreenPrimary;
+    [nswindow setCollectionBehavior:behavior];
+    [nswindow toggleFullScreen:nil];
+    return [nswindow styleMask] & NSFullScreenWindowMask;
 }
 
 int AppUtils::renderx()
 {
-    return [[NSScreen mainScreen] visibleFrame].origin.x;
+    return static_cast<int>([[NSScreen mainScreen] visibleFrame].origin.x);
 }
 
 int AppUtils::rendery()
 {
-    return [[NSScreen mainScreen] visibleFrame].origin.y;
+    return static_cast<int>([[NSScreen mainScreen] visibleFrame].origin.y);
 }
 
 int AppUtils::renderw()
 {
-    return [[NSScreen mainScreen] visibleFrame].size.width;
+    return static_cast<int>([[NSScreen mainScreen] visibleFrame].size.width);
 }
 
 int AppUtils::renderh()
 {
-    return [[NSScreen mainScreen] visibleFrame].size.height;
+    return static_cast<int>([[NSScreen mainScreen] visibleFrame].size.height);
 }
 
 int AppUtils::screenx()
 {
-    return [[NSScreen mainScreen] frame].origin.x;
+    return static_cast<int>([[NSScreen mainScreen] frame].origin.x);
 }
 
 int AppUtils::screeny()
 {
-    return [[NSScreen mainScreen] frame].origin.y;
+    return static_cast<int>([[NSScreen mainScreen] frame].origin.y);
 }
 
 int AppUtils::screenw()
 {
-    return [[NSScreen mainScreen] frame].size.width;
+    return static_cast<int>([[NSScreen mainScreen] frame].size.width);
 }
 
 int AppUtils::screenh()
 {
-    return [[NSScreen mainScreen] frame].size.height;
+    return static_cast<int>([[NSScreen mainScreen] frame].size.height);
 }
 
 

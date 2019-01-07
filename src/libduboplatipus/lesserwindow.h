@@ -20,7 +20,7 @@ namespace DuboPlatipus {
 class LIBDUBOPLATIPUSSHARED_EXPORT LesserWindow: public QWidget {
     Q_OBJECT
 public:
-    explicit LesserWindow(QWidget *parent = 0);
+    explicit LesserWindow(QWidget *parent = nullptr);
 //    ~LesserWindow();
     int x() const;
     int y() const;

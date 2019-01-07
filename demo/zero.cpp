@@ -2,8 +2,6 @@
 #include <libduboplatipus/zerohello/browser.h>
 #include <libduboplatipus/zerohello/registrar.h>
 #include <QTime>
-#include <QSystemTrayIcon>
-#include <libduboplatipus/notifier.h>
 
 using namespace DuboPlatipus::ZeroHello;
 Zero::Zero(QObject *parent) :
@@ -18,7 +16,7 @@ Zero::Zero(QObject *parent) :
     int high = 50000;
     int low = 8080;
     QTime time = QTime::currentTime();
-    qsrand((uint)time.msec());
+    qsrand(static_cast<uint>(time.msec()));
     int port = qrand() % ((high + 1) - low) + low;
 
     // Call upon the registrar
@@ -26,7 +24,7 @@ Zero::Zero(QObject *parent) :
     // Create our record (name+hostname+port, type)
     Record ourselves = Record(sayMyNameBaby.append(QHostInfo::localHostName()).append(QString::number(port)), serviceType, "");
     // And register ourselves
-    registrar->registerService(ourselves, port);
+    registrar->registerService(ourselves, static_cast<quint16>(port));
     // Connect to be notified that registration went through
     connect(registrar, SIGNAL(registered(const Record &)), this, SLOT(registeredSlot(const Record &)));
 
@@ -35,19 +33,12 @@ Zero::Zero(QObject *parent) :
     // And discover for our serviceType
     browser->browse(serviceType);
     // Connect the browser to our slot
-    connect(browser,SIGNAL(changed(const QList<Record>)), this, SLOT(newAnnounceSlot(const QList<Record>)));
+    connect(browser, SIGNAL(changed(const QList<Record>)), this, SLOT(newAnnounceSlot(const QList<Record>)));
 
 }
 
 void Zero::newAnnounceSlot(const QList<Record> &list)
 {
-    QSystemTrayIcon * t = new QSystemTrayIcon();
-    t->show();
-//    DuboPlatipus::Notificator * n = new DuboPlatipus::Notificator("program name", t);
-//    n->notify(DuboPlatipus::Notificator::Information, "title something", "text something");
-    DuboPlatipus::Notifier * n = new DuboPlatipus::Notifier(this, t);
-    n->notify("MyApp", "MyTitle", "MySubTitle", "MyText", QPixmap(), n->APP(), 5000);
-
     // Get signaled when we discover new stuff
     qDebug() << "Hohoho, there is somebody in there! Vous voulez du chocolat?";
     foreach (DuboPlatipus::ZeroHello::Record record, list) {
