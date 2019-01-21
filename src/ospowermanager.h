@@ -9,46 +9,42 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef DUBOPLATIPUS_POWERMANAGER_H
-#define DUBOPLATIPUS_POWERMANAGER_H
+#ifndef DUBOPLATIPUS_OSPOWERMANAGER_H
+#define DUBOPLATIPUS_OSPOWERMANAGER_H
 
 #include "libduboplatipus/global.h"
 #include <QObject>
+#include <QDebug>
 
-namespace DuboPlatipus
-{
+namespace DuboPlatipus {
 
-class LIBDUBOPLATIPUSSHARED_EXPORT PowerManager : public QObject
+class LIBDUBOPLATIPUSSHARED_EXPORT OSPowerManager : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-    explicit PowerManager(QObject * parent = nullptr);
+    explicit OSPowerManager(QObject * parent = nullptr): QObject(parent), m_busy(0)
+    {
+        qDebug() << " [M] Base System/PowerManager: constructor";
+    }
 
-    Q_PROPERTY(uint state READ getState     NOTIFY stateChanged)
+    static const uint NONE = 0;
+    static const uint SYSTEM = 1;
+    static const uint SCREEN = 2;
 
-    Q_INVOKABLE void setState(const uint busy, const QString & reason );
+    uint getState()
+    {
+        qDebug() << " [M] PowerManager: query state" << m_busy;
+        return m_busy;
+    }
 
-    Q_PROPERTY(uint NONE    READ getNone    CONSTANT)
-    Q_PROPERTY(uint SYSTEM  READ getSystem  CONSTANT)
-    Q_PROPERTY(uint SCREEN  READ getScreen  CONSTANT)
+    virtual void setState(const uint /* busy */, const QString & /*reason*/ ){}
 
-    uint getState();
+protected:
+    uint m_busy;
 
-    uint getSystem();
-
-    uint getScreen();
-
-    uint getNone();
-
-signals:
-    void stateChanged();
-
-private:
-    class Private;
-    Private* d;
 };
 
 }
 
-#endif // DUBOPLATIPUS_POWERMANAGER_H
+#endif // DUBOPLATIPUS_OSPOWERMANAGER_H

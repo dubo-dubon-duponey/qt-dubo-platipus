@@ -23,8 +23,8 @@ HEADERS +=  $$PWD/lib$${TARGET}/global.h \
             $$PWD/lib$${TARGET}/apputils.h \
             $$PWD/lib$${TARGET}/merguez.h \
             $$PWD/lib$${TARGET}/mediakeys.h \
-            $$PWD/lib$${TARGET}/basepowermanagement.h \
-            $$PWD/lib$${TARGET}/powermanager.h
+            $$PWD/lib$${TARGET}/powermanager.h \
+            $$PWD/ospowermanager.h
 
 win32{
 #    INCLUDEPATH += $$PWD/win
@@ -32,8 +32,8 @@ win32{
     SOURCES += $$PWD/win/apputils.cpp
     SOURCES += $$PWD/win/merguez.cpp
     SOURCES += $$PWD/win/mediakeys.cpp
-    HEADERS += $$PWD/win/powermanagementwindows.h
-    SOURCES += $$PWD/win/powermanagementwindows.cpp
+    HEADERS += $$PWD/win/powermanagerwindows.h
+    SOURCES += $$PWD/win/powermanagerwindows.cpp
     SOURCES += $$PWD/win/lesserwindow.cpp
 }
 
@@ -44,8 +44,8 @@ unix:!mac{
     # The linux/dbus code is largely copied from  qBitTorrent Bittorrent Client,
     # Copyright (C) 2011  Vladimir Golovnev <glassez@yandex.ru>
     # Released under the GPL with an exception clause for OpenSSL
-    HEADERS += $$PWD/nux/powermanagementnux.h
-    SOURCES += $$PWD/nux/powermanagementnux.cpp
+    HEADERS += $$PWD/nux/powermanagernux.h
+    SOURCES += $$PWD/nux/powermanagernux.cpp
 
     SOURCES += $$PWD/nux/apputils.cpp
     SOURCES += $$PWD/nux/merguez.cpp
@@ -84,7 +84,8 @@ mac{
 
 #    INCLUDEPATH += $$PWD/mac
 
-    HEADERS += $$PWD/mac/powermanagementmac.h
+    HEADERS += $$PWD/mac/powermanagermac.h
+    SOURCES += $$PWD/mac/powermanagermac.cpp
 
     # Cocoa helper
     HEADERS +=              $$PWD/mac/cocoainit.h
@@ -96,5 +97,4 @@ mac{
     OBJECTIVE_SOURCES +=    $$PWD/mac/mediakeys.mm
     OBJECTIVE_SOURCES +=    $$PWD/mac/lesserwindow.mm
 
-    SOURCES += $$PWD/mac/powermanagementmac.cpp
 }

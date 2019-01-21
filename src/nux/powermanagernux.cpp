@@ -1,3 +1,14 @@
+/*
+ * Copyright (c) 2019, Dubo Dubon Duponey <dubodubonduponey+github@pm.me>
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+ * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
 #include "powermanagementnux.h"
 
 #include <QDebug>
@@ -7,10 +18,10 @@
 #include <QDBusPendingCall>
 #include <QDBusPendingReply>
 
-PowerManagementNux::PowerManagementNux(QObject *parent) :
-    BasePowerManagement(parent)
+PowerManagerNux::PowerManagerNux(QObject *parent) :
+    OSPowerManager(parent)
 {
-    qDebug() << " [M/Nux] System/PowerManagement: constructor";
+    qDebug() << " [M/Nux] System/PowerManager: constructor";
     if(!QDBusConnection::sessionBus().isConnected())
     {
         qDebug("D-Bus: Could not connect to session bus");
@@ -26,9 +37,9 @@ PowerManagementNux::PowerManagementNux(QObject *parent) :
     m_use_gsm = false;
 }
 
-void PowerManagementNux::setState(uint dobusy, const QString &/* reason*/)
+void PowerManagerNux::setState(uint dobusy, const QString &/* reason*/)
 {
-    qDebug() << " [M/Nux] System/PowerManagement: set new state";
+    qDebug() << " [M/Nux] System/PowerManager: set new state";
     if(m_busy == dobusy){
         return;
     }
@@ -38,9 +49,9 @@ void PowerManagementNux::setState(uint dobusy, const QString &/* reason*/)
     QDBusMessage call;
     if (!m_use_gsm)
         call = QDBusMessage::createMethodCall(
-                "org.freedesktop.PowerManagement",
-                "/org/freedesktop/PowerManagement/Inhibit",
-                "org.freedesktop.PowerManagement.Inhibit",
+                "org.freedesktop.PowerManager",
+                "/org/freedesktop/PowerManager/Inhibit",
+                "org.freedesktop.PowerManager.Inhibit",
                 dobusy ? "Inhibit" : "UnInhibit");
     else
         call = QDBusMessage::createMethodCall(
@@ -71,7 +82,7 @@ void PowerManagementNux::setState(uint dobusy, const QString &/* reason*/)
 }
 
 
-void PowerManagementNux::OnAsyncReply(QDBusPendingCallWatcher *call)
+void PowerManagerNux::OnAsyncReply(QDBusPendingCallWatcher *call)
 {
     if (m_state == request_idle)
     {
@@ -85,7 +96,7 @@ void PowerManagementNux::OnAsyncReply(QDBusPendingCallWatcher *call)
         else
         {
             m_state = idle;
-            qDebug("D-Bus: PowerManagementInhibitor: Request successful");
+            qDebug("D-Bus: PowerManagerInhibitor: Request successful");
             if (m_intended_state == busy)
                 this->setState(1, QString::fromLatin1(""));
         }
@@ -116,7 +127,7 @@ void PowerManagementNux::OnAsyncReply(QDBusPendingCallWatcher *call)
         {
             m_state = busy;
             m_cookie = reply.value();
-            qDebug("D-Bus: PowerManagementInhibitor: Request successful, cookie is %d", m_cookie);
+            qDebug("D-Bus: PowerManagerInhibitor: Request successful, cookie is %d", m_cookie);
             if (m_intended_state == idle)
                 // XXX
                 this->setState(0, QString("Iddle"));

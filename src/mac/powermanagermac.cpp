@@ -1,19 +1,30 @@
-#include "powermanagementmac.h"
+/*
+ * Copyright (c) 2019, Dubo Dubon Duponey <dubodubonduponey+github@pm.me>
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+ * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+#include "powermanagermac.h"
 
 #include <QDebug>
 
-PowerManagementMac::PowerManagementMac(QObject *parent) :
-    BasePowerManagement(parent), m_assertionID(0)
+PowerManagerMac::PowerManagerMac(QObject *parent) :
+    OSPowerManager(parent), m_assertionID(0)
 {
-    qDebug() << " [M/Mac]System/PowerManagement: constructor";
+    qDebug() << " [M/Mac]System/PowerManager: constructor";
     //    @param master_device_port  Just pass in MACH_PORT_NULL for master device port.
     //    @result Returns a io_connect_t handle on the root domain. Must be released with IOServiceClose() when done.
     m_connectIO = IOPMFindPowerManagement( MACH_PORT_NULL );
 }
 
-PowerManagementMac::~PowerManagementMac()
+PowerManagerMac::~PowerManagerMac()
 {
-    qDebug() << " [M/Mac] System/PowerManagement: destructor";
+    qDebug() << " [M/Mac] System/PowerManager: destructor";
     IOServiceClose(m_connectIO);
     if(m_assertionID){
         IOPMAssertionRelease(m_assertionID);
@@ -21,9 +32,9 @@ PowerManagementMac::~PowerManagementMac()
     }
 }
 
-void PowerManagementMac::setState(const uint busy, const QString & reason)
+void PowerManagerMac::setState(const uint busy, const QString & reason)
 {
-    qDebug() << " [M/Mac] System/PowerManagement: set new state";
+    qDebug() << " [M/Mac] System/PowerManager: set new state";
     if(m_busy == busy){
         return;
     }
@@ -40,24 +51,24 @@ void PowerManagementMac::setState(const uint busy, const QString & reason)
     // kIOPMAssertionTypePreventSystemSleep - general system sleep prevention (dark wake)
     success = kIOReturnError;
     switch(busy){
-    case BasePowerManagement::SYSTEM:
+    case OSPowerManager::SYSTEM:
         success = IOPMAssertionCreateWithName(kIOPMAssertionTypePreventUserIdleSystemSleep, kIOPMAssertionLevelOn, reasonForActivity, &m_assertionID);
         break;
-    case BasePowerManagement::SCREEN:
+    case OSPowerManager::SCREEN:
         success = IOPMAssertionCreateWithName(kIOPMAssertionTypePreventUserIdleDisplaySleep, kIOPMAssertionLevelOn, reasonForActivity, &m_assertionID);
         break;
-    case BasePowerManagement::NONE:
+    case OSPowerManager::NONE:
+        success = kIOReturnSuccess;
         break;
     }
     if(success != kIOReturnSuccess){
-        m_busy = BasePowerManagement::NONE;
-        qDebug() << " [M/Mac] System/PowerManagement: FAILED setting new state";
+        m_busy = OSPowerManager::NONE;
+        qDebug() << " [M/Mac] System/PowerManager: FAILED setting new state";
     }else{
         m_busy = busy;
+        qDebug() << " [M/Mac] Did set power manager to" << busy;
     }
-    return;
 }
-
 
 
 //- (void) receiveSleepNote: (NSNotification*) note
