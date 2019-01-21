@@ -3,12 +3,9 @@
         <meta charset="utf8" />
         <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
         <script>
-        new QWebChannel(qt.webChannelTransport, function(channel){
-            // Purely for debug
-            window.XXX = channel.objects;
-
+        window.addEventListener("roxee", function(e){
             // Display library information
-            var disp = channel.objects.Root;
+            var disp = e.API.root;
             var iNode = document.getElementById("info");
             var list = ["NAME", "VENDOR", "VERSION", "REVISION", "CHANGESET", "BUILD", "LINK", "QT", "PLUGIN_NAME", "PLUGIN_VERSION", "PLUGIN_REVISION"];
 
@@ -17,12 +14,71 @@
                 line.appendChild(document.createTextNode(i + ": " + disp[i]));
                 iNode.appendChild(line)
             });
+
+            // Power manager API
+            var setState = function(){
+                var ps = document.getElementById('powermanagerState');
+                var state;
+                switch(e.API.powerManager.state){
+                    case e.API.powerManager.NONE:
+                        state = "NONE";
+                    break;
+                    case e.API.powerManager.SYSTEM:
+                        state = "SYSTEM";
+                    break;
+                    case e.API.powerManager.SCREEN:
+                        state = "SCREEN";
+                    break;
+                }
+                ps.innerHTML = "Current state: " + state;
+            };
+
+            setState();
+
+            e.API.powerManager.stateChanged.connect(setState);
+
+            var rem = document.getElementById("powermanagerNONE");
+            rem.removeAttribute("disabled");
+            rem.onclick = function(){
+                e.API.powerManager.setState(e.API.powerManager.NONE, "Whatever reason to set to none!");
+            };
+
+            rem = document.getElementById("powermanagerSCREEN");
+            rem.removeAttribute("disabled");
+            rem.onclick = function(){
+                e.API.powerManager.setState(e.API.powerManager.SCREEN, "Whatever reason to set to screen!");
+            };
+
+            rem = document.getElementById("powermanagerSYSTEM");
+            rem.removeAttribute("disabled");
+            rem.onclick = function(){
+                e.API.powerManager.setState(e.API.powerManager.SYSTEM, "Whatever reason to set to system!");
+            };
+
         });
+
+        window.addEventListener("load", function(){
+            new QWebChannel(qt.webChannelTransport, function(channel){
+                var e = new Event("roxee");
+                window.Dubo = window.Dubo || {};
+                e.API = window.Dubo["platipus"] = {
+                    root: channel.objects.Root,
+                    powerManager: channel.objects.PowerManager
+                };
+                window.dispatchEvent(e);
+            });
+        });
+
 
         </script>
     </head>
     <body>
-        <div id="info">
+        <div id="info"></div>
+        <div id="powermanager">
+            <div id="powermanagerState"></div>
+            <button id="powermanagerNONE" disabled="disabled">Do not prevent sleeping</button>
+            <button id="powermanagerSYSTEM" disabled="disabled">Prevent system from sleeping</button>
+            <button id="powermanagerSCREEN" disabled="disabled">Prevent screen from sleeping</button>
         </div>
     </body>
 </html>
