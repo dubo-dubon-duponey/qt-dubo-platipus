@@ -13,8 +13,6 @@
 #include <libduboplatipus/merguez.h>
 #include <libduboplatipus/powermanager.h>
 
-#include "zero.h"
-
 #include <QtWebEngine>
 #include <QWebEngineView>
 #include <QWebEnginePage>
@@ -65,9 +63,6 @@ int main(int argc, char *argv[])
     view->load(QUrl("qrc:/demo.html"));
     view->show();
 
-    // Instanciate
-    new Zero();
-
     /**
      * AppUtils
      */
@@ -93,9 +88,6 @@ int main(int argc, char *argv[])
     // Toggle fullscreen
     // XXX comment out for now DuboPlatipus::AppUtils::fullscrenToggle(w);
 
-    /**
-     * Notifier
-     */
     DuboPlatipus::PowerManager * b = new DuboPlatipus::PowerManager();
     qDebug() << b->getState();
 

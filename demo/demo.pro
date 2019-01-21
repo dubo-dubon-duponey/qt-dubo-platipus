@@ -25,18 +25,3 @@ mac{
     QMAKE_INFO_PLIST = $${PWD}/Info.plist
     ICON = $${PWD}/demo.icns
 }
-
-
-
-
-
-# Shitty right now
-#win32{
-#    INCLUDEPATH += C:\somewhere\trees\bonjour\include
-#    LIBS += -LC:\somewhere\trees\bonjour\lib
-#}
-
-QT += network
-
-HEADERS += zero.h
-SOURCES += zero.cpp

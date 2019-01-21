@@ -11,17 +11,11 @@ contains(DUBO_LINK_TYPE, static){
     DEFINES += LIBDUBOPLATIPUS_USE_STATIC
 }
 
-copyToDestdir($$PWD/lib$${TARGET}/zerohello/*, $$DESTDIR/../include/lib$${TARGET}/zerohello)
 copyToDestdir($$PWD/lib$${TARGET}/*.h, $$DESTDIR/../include/lib$${TARGET})
 copyToDestdir($$PWD/../res/redist/*, $$DESTDIR/../share/lib$${TARGET})
 
 SOURCES +=  $$PWD/root.cpp\
-            $$PWD/powermanager.cpp \
-            $$PWD/zerohello/browser.cpp \
-            $$PWD/zerohello/registrar.cpp \
-            $$PWD/zerohello/resolver.cpp \
-            $$PWD/zerohello/genericzero.cpp \
-            $$PWD/zerohello/zerohello.cpp
+            $$PWD/powermanager.cpp
 
 HEADERS +=  $$PWD/lib$${TARGET}/global.h \
             $$PWD/lib$${TARGET}/root.h \
@@ -30,13 +24,7 @@ HEADERS +=  $$PWD/lib$${TARGET}/global.h \
             $$PWD/lib$${TARGET}/merguez.h \
             $$PWD/lib$${TARGET}/mediakeys.h \
             $$PWD/lib$${TARGET}/basepowermanagement.h \
-            $$PWD/lib$${TARGET}/powermanager.h \
-            $$PWD/lib$${TARGET}/zerohello/browser.h \
-            $$PWD/lib$${TARGET}/zerohello/record.h \
-            $$PWD/lib$${TARGET}/zerohello/registrar.h \
-            $$PWD/lib$${TARGET}/zerohello/resolver.h \
-            $$PWD/lib$${TARGET}/zerohello/genericzero.h \
-            $$PWD/lib$${TARGET}/zerohello/zerohello.h
+            $$PWD/lib$${TARGET}/powermanager.h
 
 win32{
 #    INCLUDEPATH += $$PWD/win
@@ -47,9 +35,6 @@ win32{
     HEADERS += $$PWD/win/powermanagementwindows.h
     SOURCES += $$PWD/win/powermanagementwindows.cpp
     SOURCES += $$PWD/win/lesserwindow.cpp
-
-# XXX because zero does not abstract bonjour correctly... and this is really shitty
-    copyToDestdir($$PWD/../third-party/bonjour-win/include/*.h, $$DESTDIR/../include)
 }
 
 unix:!mac{
