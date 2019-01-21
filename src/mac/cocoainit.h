@@ -15,7 +15,7 @@
 class CocoaInitializer
 {
 	public:
-		CocoaInitializer();
+        explicit CocoaInitializer();
 		~CocoaInitializer();
 
 	private:

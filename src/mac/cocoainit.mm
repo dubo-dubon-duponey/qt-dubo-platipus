@@ -10,8 +10,9 @@
  */
 
 #include <AppKit/AppKit.h>
-#include "cocoainit.h"
 #include <QDebug>
+
+#include "cocoainit.h"
 
 class CocoaInitializer::Private
 {
@@ -23,7 +24,6 @@ CocoaInitializer::CocoaInitializer()
 {
     qDebug() << "     +++ [Lib] {Platipus}: cocoa initializer";
     d = new CocoaInitializer::Private();
-//	NSApplicationLoad();
 	d->autoReleasePool = [[NSAutoreleasePool alloc] init];
 }
 
