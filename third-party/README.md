@@ -1,6 +1,4 @@
-==========================================
-= External dependencies
-==========================================
+# External dependencies
 
 Only OSX build has external dependencies.
 More infos about these (objc libraries):
