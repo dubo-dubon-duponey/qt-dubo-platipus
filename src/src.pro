@@ -15,26 +15,40 @@ copyToDestdir($$PWD/lib$${TARGET}/*.h, $$DESTDIR/../include/lib$${TARGET})
 copyToDestdir($$PWD/../res/redist/*, $$DESTDIR/../share/lib$${TARGET})
 
 SOURCES +=  $$PWD/root.cpp\
-            $$PWD/powermanager.cpp
+            $$PWD/meanerwindow.cpp \
+            $$PWD/powermanager.cpp \
+            $$PWD/icon.cpp \
+            $$PWD/tray.cpp \
+            $$PWD/menu.cpp \
+            $$PWD/menubar.cpp \
+            $$PWD/action.cpp
+
 
 HEADERS +=  $$PWD/lib$${TARGET}/global.h \
             $$PWD/lib$${TARGET}/root.h \
             $$PWD/lib$${TARGET}/lesserwindow.h \
+            $$PWD/lib$${TARGET}/meanerwindow.h \
             $$PWD/lib$${TARGET}/apputils.h \
             $$PWD/lib$${TARGET}/merguez.h \
             $$PWD/lib$${TARGET}/mediakeys.h \
             $$PWD/lib$${TARGET}/powermanager.h \
+            $$PWD/lib$${TARGET}/icon.h \
+            $$PWD/lib$${TARGET}/tray.h \
+            $$PWD/lib$${TARGET}/menu.h \
+            $$PWD/lib$${TARGET}/menubar.h \
+            $$PWD/lib$${TARGET}/action.h \
             $$PWD/ospowermanager.h
 
 win32{
 #    INCLUDEPATH += $$PWD/win
 
-    SOURCES += $$PWD/win/apputils.cpp
-    SOURCES += $$PWD/win/merguez.cpp
-    SOURCES += $$PWD/win/mediakeys.cpp
     HEADERS += $$PWD/win/powermanagerwindows.h
     SOURCES += $$PWD/win/powermanagerwindows.cpp
+    SOURCES += $$PWD/win/apputils.cpp
     SOURCES += $$PWD/win/lesserwindow.cpp
+
+    SOURCES += $$PWD/win/merguez.cpp
+    SOURCES += $$PWD/win/mediakeys.cpp
 }
 
 unix:!mac{
@@ -46,16 +60,13 @@ unix:!mac{
     # Released under the GPL with an exception clause for OpenSSL
     HEADERS += $$PWD/nux/powermanagernux.h
     SOURCES += $$PWD/nux/powermanagernux.cpp
-
     SOURCES += $$PWD/nux/apputils.cpp
+    SOURCES += $$PWD/nux/lesserwindow.cpp
+
     SOURCES += $$PWD/nux/merguez.cpp
     SOURCES += $$PWD/nux/mediakeys.cpp
-    SOURCES += $$PWD/nux/lesserwindow.cpp
 }
 mac{
-    # Use Lion Fullscreen if available
-    DEFINES += PLATIPUS_FULLSCREEN
-
     ###################
     # Dependencies
     ###################
@@ -93,8 +104,9 @@ mac{
 
     # Implementation
     OBJECTIVE_SOURCES +=    $$PWD/mac/apputils.mm
+    OBJECTIVE_SOURCES +=    $$PWD/mac/lesserwindow.mm
+
     OBJECTIVE_SOURCES +=    $$PWD/mac/merguez.mm
     OBJECTIVE_SOURCES +=    $$PWD/mac/mediakeys.mm
-    OBJECTIVE_SOURCES +=    $$PWD/mac/lesserwindow.mm
 
 }

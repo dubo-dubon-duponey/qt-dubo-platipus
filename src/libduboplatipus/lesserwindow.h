@@ -14,25 +14,64 @@
 
 #include "libduboplatipus/global.h"
 #include <QWidget>
+#include <QDropEvent>
+#include <QMimeData>
+#include <QFileInfo>
+#include <QDebug>
 
 namespace DuboPlatipus {
 
-class LIBDUBOPLATIPUSSHARED_EXPORT LesserWindow: public QWidget {
+class LIBDUBOPLATIPUSSHARED_EXPORT LesserWindow: public QObject {
     Q_OBJECT
 public:
-    explicit LesserWindow(QWidget *parent = nullptr);
+    explicit LesserWindow(QWidget * window, QObject * parent = nullptr);
 //    ~LesserWindow();
+
+    Q_PROPERTY(bool moveable    READ moveable    WRITE setMoveable   NOTIFY updated)
+    Q_PROPERTY(bool shadow      READ shadow      WRITE setShadow     NOTIFY updated)
+    Q_PROPERTY(double alpha     READ alpha       WRITE setAlpha      NOTIFY updated)
+
+    Q_PROPERTY(bool fullscreen  READ fullscreen   WRITE setFullscreen NOTIFY updated)
+    bool fullscreen();
+    void setFullscreen(bool value);
+
+    // XXX these are not properties yet for we do not listen on changes
+    Q_INVOKABLE bool shouldMinimizeOnDoubleClick();
+    Q_INVOKABLE bool isDarkMode();
+    Q_INVOKABLE int accentColor();
+
+    Q_PROPERTY(int x            READ x                                  NOTIFY updated)
+    Q_PROPERTY(int y            READ y                                  NOTIFY updated)
+    Q_INVOKABLE void moveTo(int x, int y);
+
+    bool moveable();
+    bool shadow();
+    double alpha();
+
+    void setMoveable(bool value);
+    void setShadow(bool value);
+    void setAlpha(double value);
+
     int x() const;
     int y() const;
-    bool minimizeOnDoubleClick() const;
-    bool hasNaturalStyle() const;
-    bool needsResizer() const;
-    void startMovable();
-    void stopMovable();
+
+    // XXX temporarily public
+    QWidget * m_window;
+
+
+signals:
+    void updated();
+
+private:
+//    QWidget * m_window;
+
+
+
+
+//    bool hasNaturalStyle() const;
 
     //    bool eventFilter(QObject * object, QEvent *event);
 
-    void move(int x, int y);
 //    void setGeometry(int x, int y, int w, int h);
 
 
@@ -44,7 +83,7 @@ public:
 //    class Private;
 //    Private* d;
 
-public Q_SLOTS:
+public slots:
 //    void repaint();
 //    void update();
     //    void toto();
@@ -111,31 +150,12 @@ protected:
 ////        emit outboundMouseMove(event);
 //    }
 
-
-//    void dropEvent(QDropEvent * e)
+    //    void resizeEvent(QResizeEvent * event)
 //    {
-//        if(e->mimeData()->urls().length()){
-//            QList<QUrl> ulist = e->mimeData()->urls();
-//            QFileInfo * inf;
-//            foreach (QUrl u, ulist){
-//                qDebug() << "Received drops: " << u.path();
-//                inf = new QFileInfo(u.path());
-//                if(inf->isDir())
-//                    emit hasDirectoryDrop(u.path());
-//                else if(inf->isFile())
-//                    emit hasFileDrop(u.path());
-//            }
-//        }
-//        e->acceptProposedAction();
+//        qDebug() << "Cancelling resize on child view";
+//        event->accept();
 //    }
 
-//    void dragEnterEvent(QDragEnterEvent *e)
-//    {
-//        if(e->mimeData()->urls().length()){
-//            qDebug() << "Received drops";
-//        }
-//        e->acceptProposedAction();
-//    }
 
 //    bool macEvent ( EventHandlerCallRef caller, EventRef event )
 //    {
@@ -152,8 +172,6 @@ protected:
 //    void hasDirectoryDrop(const QString & path);
 
 //public slots:
-
-
 };
 }
 

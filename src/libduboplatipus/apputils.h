@@ -13,8 +13,8 @@
 #define DUBOPLATIPUS_APPUTILS_H
 
 #include "libduboplatipus/global.h"
-#include <QObject>
 
+#include <QObject>
 #include <QString>
 #include <QWidget>
 
@@ -23,22 +23,44 @@ namespace DuboPlatipus {
 class LIBDUBOPLATIPUSSHARED_EXPORT AppUtils: public QObject {
     Q_OBJECT
 public:
+    explicit AppUtils(QObject * parent = nullptr);
+    ~AppUtils();
 
-    static void badgeMe(const QString &text);
-    Q_INVOKABLE void bitchMe();
+    Q_INVOKABLE void badge(const QString &text);
+    Q_INVOKABLE void annoy();
 
-    static bool isFullScreen(QWidget * mainWindow);
-    static bool fullscrenToggle(QWidget * mainWindow);
+    // Note: the mac implementation differs from the QT one on:
+    // - origin (bottom vs. top)
+    // - the screen returned is the one holding the current active window, versus the screen where new windows are going to pop-up
+    Q_PROPERTY(int renderx  READ renderx NOTIFY updated)
+    Q_PROPERTY(int rendery  READ rendery NOTIFY updated)
+    Q_PROPERTY(uint renderw READ renderw NOTIFY updated)
+    Q_PROPERTY(uint renderh READ renderh NOTIFY updated)
+
+    Q_PROPERTY(int screenx  READ screenx NOTIFY updated)
+    Q_PROPERTY(int screeny  READ screeny NOTIFY updated)
+    Q_PROPERTY(uint screenw READ screenw NOTIFY updated)
+    Q_PROPERTY(uint screenh READ screenh NOTIFY updated)
 
     static int renderx();
     static int rendery();
-    static int renderw();
-    static int renderh();
+    static uint renderw();
+    static uint renderh();
 
     static int screenx();
     static int screeny();
-    static int screenw();
-    static int screenh();
+    static uint screenw();
+    static uint screenh();
+
+public slots:
+    void screenChanged();
+
+signals:
+    void updated();
+
+private:
+    class Private;
+    Private* d;
 };
 
 }

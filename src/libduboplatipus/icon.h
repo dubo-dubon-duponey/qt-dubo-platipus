@@ -9,46 +9,61 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef DUBOPLATIPUS_POWERMANAGER_H
-#define DUBOPLATIPUS_POWERMANAGER_H
+#ifndef DUBOMODULES_UI_ICON_H
+#define DUBOMODULES_UI_ICON_H
 
-#include "libduboplatipus/global.h"
 #include <QObject>
+#include <QMenu>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QBuffer>
 
-namespace DuboPlatipus
+// Helper scriptable object that passes uris around
+namespace DuboPlatipus{
+namespace UI{
+
+class Icon : public QObject
 {
-
-class LIBDUBOPLATIPUSSHARED_EXPORT PowerManager : public QObject
-{
-  Q_OBJECT
-
+    Q_OBJECT
 public:
-    explicit PowerManager(QObject * parent = nullptr);
+    explicit Icon(QObject * parent = nullptr): QObject(parent){
+        connect(
+            &netManager, SIGNAL (finished(QNetworkReply*)),
+            this, SLOT (iconDownloaded(QNetworkReply*))
+         );
+    }
 
-    Q_PROPERTY(uint state READ getState     NOTIFY stateChanged)
+    Q_PROPERTY(QString  URI    READ getIcon WRITE setIcon  NOTIFY updated)
 
-    Q_INVOKABLE void setState(const uint busy, const QString & reason );
-
-    Q_PROPERTY(uint NONE    READ getNone    CONSTANT)
-    Q_PROPERTY(uint SYSTEM  READ getSystem  CONSTANT)
-    Q_PROPERTY(uint SCREEN  READ screen  CONSTANT)
-
-    uint getState();
-
-    uint getSystem();
-
-    uint screen();
-
-    uint getNone();
+    QPixmap * internalIcon = new QPixmap();
 
 signals:
-    void stateChanged();
+    void updated();
+
+private slots:
+    void iconDownloaded(QNetworkReply* pReply){
+        QByteArray data = pReply->readAll();
+        pReply->deleteLater();
+        internalIcon->loadFromData(data);
+        emit updated();
+    }
 
 private:
-    class Private;
-    Private* d;
-};
+    QNetworkAccessManager netManager;
 
+    QString getIcon() const {
+        QByteArray byteArray;
+        QBuffer buffer(&byteArray);
+        internalIcon->save(&buffer, "PNG");
+        return QString("data:image/png;base64,") + byteArray.toBase64();
+    }
+
+    void setIcon(const QString url) {
+        netManager.get(QNetworkRequest(url));
+    }
+
+};
+}
 }
 
-#endif // DUBOPLATIPUS_POWERMANAGER_H
+#endif // DUBOMODULES_UI_ICON_H

@@ -18,8 +18,9 @@
 
 #include <libduboplatipus/root.h>
 #include <libduboplatipus/apputils.h>
-#include <libduboplatipus/basepowermanagement.h>
 #include <libduboplatipus/lesserwindow.h>
+#include <libduboplatipus/menubar.h>
+#include <libduboplatipus/tray.h>
 #include <libduboplatipus/mediakeys.h>
 #include <libduboplatipus/merguez.h>
 #include <libduboplatipus/powermanager.h>
@@ -46,14 +47,6 @@ void OutputLibraryInfo(){
     qDebug() << root->property("PLUGIN_REVISION");
 }
 
-
-void bitchMe()
-{
-    // Will bump the dock icon if the app is in the background to attract user attention
-    DuboPlatipus::AppUtils * q = new DuboPlatipus::AppUtils();
-    q->bitchMe();
-}
-
 int main(int argc, char *argv[])
 {
     // Get your app going
@@ -74,51 +67,26 @@ int main(int argc, char *argv[])
     // Attach objects to the javascript context
     DuboPlatipus::Root * root = new DuboPlatipus::Root();
     DuboPlatipus::PowerManager * b = new DuboPlatipus::PowerManager();
-    qDebug() << b->getState();
+    DuboPlatipus::AppUtils * au = new DuboPlatipus::AppUtils(view);
+    DuboPlatipus::LesserWindow * lw = new DuboPlatipus::LesserWindow(view, view);
+
+    DuboPlatipus::UI::MenuBar * mb = new DuboPlatipus::UI::MenuBar(view);
+    DuboPlatipus::UI::Tray * tray = new DuboPlatipus::UI::Tray(view);
 
     chan->registerObject("Root", root);
     chan->registerObject("PowerManager", b);
-    // chan->registerObject("Dubo", notifier);
+    chan->registerObject("AppUtils", au);
+    chan->registerObject("Window", lw);
+    chan->registerObject("MenuBar", mb);
+    chan->registerObject("Tray", tray);
 
     view->load(QUrl("qrc:/demo.html"));
     view->show();
 
-    /**
-     * AppUtils
-     */
-    // Adds a dock icon badge
-    DuboPlatipus::AppUtils::badgeMe("Badge ∞!");
-
-    // See the method above
-    QTimer::singleShot(5000, bitchMe);
-
-    qDebug() << "Is fullscreen:";
-    qDebug() << DuboPlatipus::AppUtils::isFullScreen(view);
-    qDebug() << "Screen dimensions:";
-    qDebug() << DuboPlatipus::AppUtils::screenx();
-    qDebug() << DuboPlatipus::AppUtils::screeny();
-    qDebug() << DuboPlatipus::AppUtils::screenw();
-    qDebug() << DuboPlatipus::AppUtils::screenh();
-    qDebug() << "Render dimensions:";
-    qDebug() << DuboPlatipus::AppUtils::renderx();
-    qDebug() << DuboPlatipus::AppUtils::rendery();
-    qDebug() << DuboPlatipus::AppUtils::renderw();
-    qDebug() << DuboPlatipus::AppUtils::renderh();
-
-    // Toggle fullscreen
-    // XXX comment out for now DuboPlatipus::AppUtils::fullscrenToggle(w);
-
-
     DuboPlatipus::MediaKeys * d = new DuboPlatipus::MediaKeys(view);
     DuboPlatipus::RemoteMerguez * e = new DuboPlatipus::RemoteMerguez(view);
-    DuboPlatipus::PowerManager * f = new DuboPlatipus::PowerManager();
+
     qDebug() << QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
-
-    return app.exec();
-
-    DuboPlatipus::LesserWindow * c = new DuboPlatipus::LesserWindow();
-
-
 
     return app.exec();
 }

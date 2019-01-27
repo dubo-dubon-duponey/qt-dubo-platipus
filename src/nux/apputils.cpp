@@ -10,82 +10,98 @@
  */
 
 #include "libduboplatipus/apputils.h"
-#include <QDesktopWidget>
+#include <QScreen>
 #include <QApplication>
 
 namespace DuboPlatipus {
 
-void AppUtils::badgeMe(const QString &/*text*/)
+AppUtils::AppUtils(QObject * parent): QObject(parent)
+{
+    connect(
+        QApplication::primaryScreen(), SIGNAL (geometryChanged(const QRect &)),
+        this, SLOT (screenChanged())
+     );
+    connect(
+        QApplication::primaryScreen(), SIGNAL (availableGeometryChanged(const QRect &)),
+        this, SLOT (screenChanged())
+     );
+    connect(
+        QApplication::primaryScreen(), SIGNAL (virtualGeometryChanged(const QRect &)),
+        this, SLOT (screenChanged())
+     );
+}
+
+AppUtils::~AppUtils()
+{
+
+}
+
+void AppUtils::screenChanged(){
+    emit updated();
+}
+
+void AppUtils::badge(const QString &/*text*/)
 {
 }
 
-void AppUtils::bitchMe()
+void AppUtils::annoy()
 {
-}
-
-bool AppUtils::isFullScreen(QWidget * mainWindow)
-{
-    return mainWindow->isFullScreen();
-}
-
-bool AppUtils::fullscrenToggle(QWidget * mainWindow)
-{
-    if(!mainWindow->isFullScreen()){
-        mainWindow->showFullScreen();
-    }
-    else if(mainWindow->isMaximized())
-        mainWindow->showMaximized();
-    else
-        mainWindow->showNormal();
-    return mainWindow->isFullScreen();
 }
 
 int AppUtils::renderx()
 {
-    QDesktopWidget * d = QApplication::desktop();
-    QRect r = d->availableGeometry(d);
-    return r.x();
+    QScreen * d = QApplication::primaryScreen();
+    QRect r = d->availableGeometry();
+    return static_cast<int>(r.x());
 }
 
 int AppUtils::rendery()
 {
-    QDesktopWidget * d = QApplication::desktop();
-    QRect r = d->availableGeometry(d);
-    return r.y();
+    QScreen * d = QApplication::primaryScreen();
+    QRect r = d->availableGeometry();
+    return static_cast<int>(r.y());
 }
 
-int AppUtils::renderw()
+uint AppUtils::renderw()
 {
-    QDesktopWidget * d = QApplication::desktop();
-    QRect r = d->availableGeometry(d);
-    return r.width();
+    QScreen * d = QApplication::primaryScreen();
+    QRect r = d->availableGeometry();
+    return static_cast<uint>(r.width());
 }
 
-int AppUtils::renderh()
+uint AppUtils::renderh()
 {
-    QDesktopWidget * d = QApplication::desktop();
-    QRect r = d->availableGeometry(d);
-    return r.height();
+    QScreen * d = QApplication::primaryScreen();
+    QRect r = d->availableGeometry();
+    return static_cast<uint>(r.height());
 }
 
 int AppUtils::screenx()
 {
-    return 0;
+    QScreen * d = QApplication::primaryScreen();
+    QRect r = d->geometry();
+    return static_cast<int>(r.x());
 }
 
 int AppUtils::screeny()
 {
-    return 0;
+    QScreen * d = QApplication::primaryScreen();
+    QRect r = d->geometry();
+    return static_cast<int>(r.y());
 }
 
-int AppUtils::screenw()
+uint AppUtils::screenw()
 {
-    return 0;
+    QScreen * d = QApplication::primaryScreen();
+    QRect r = d->geometry();
+    return static_cast<uint>(r.width());
 }
 
-int AppUtils::screenh()
+uint AppUtils::screenh()
 {
-    return 0;
+    QScreen * d = QApplication::primaryScreen();
+    QRect r = d->geometry();
+    return static_cast<uint>(r.height());
 }
 
 }

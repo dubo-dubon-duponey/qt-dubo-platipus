@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2019, Dubo Dubon Duponey <dubodubonduponey+github@pm.me>
+/**
+ * Copyright (c) 2018, Dubo Dubon Duponey <dubodubonduponey+github@pm.me>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -9,46 +9,45 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef DUBOPLATIPUS_POWERMANAGER_H
-#define DUBOPLATIPUS_POWERMANAGER_H
+#include "libduboplatipus/menubar.h"
+#include "libduboplatipus/action.h"
 
-#include "libduboplatipus/global.h"
-#include <QObject>
+#include <QDebug>
 
-namespace DuboPlatipus
+namespace DuboPlatipus{
+namespace UI{
+
+MenuBar::MenuBar(QObject *parent) :
+    QObject(parent)
 {
-
-class LIBDUBOPLATIPUSSHARED_EXPORT PowerManager : public QObject
-{
-  Q_OBJECT
-
-public:
-    explicit PowerManager(QObject * parent = nullptr);
-
-    Q_PROPERTY(uint state READ getState     NOTIFY stateChanged)
-
-    Q_INVOKABLE void setState(const uint busy, const QString & reason );
-
-    Q_PROPERTY(uint NONE    READ getNone    CONSTANT)
-    Q_PROPERTY(uint SYSTEM  READ getSystem  CONSTANT)
-    Q_PROPERTY(uint SCREEN  READ screen  CONSTANT)
-
-    uint getState();
-
-    uint getSystem();
-
-    uint screen();
-
-    uint getNone();
-
-signals:
-    void stateChanged();
-
-private:
-    class Private;
-    Private* d;
-};
-
+    // Shared between all windows of the application
+    qt = new QMenuBar(nullptr);
+    qt->show();
+    // Default behavior
+    qt->setNativeMenuBar(true);
 }
 
-#endif // DUBOPLATIPUS_POWERMANAGER_H
+void MenuBar::clear() const
+{
+    qt->clear();
+}
+
+//QVariant MenuBar::addAction(int role)
+//{
+//    Action * action = new Action();
+//    qDebug() << "Role" << (QAction::MenuRole) role;
+//    action->qt->setText("toto");
+//    action->qt->setMenuRole(QAction::AboutRole);//(QAction::MenuRole) role);
+//    qt->addAction(action->qt);
+//    return QVariant::fromValue((QObject*) action);
+//}
+
+QVariant MenuBar::addMenu()
+{
+    Menu * menu = new Menu(this);
+    qt->addMenu(menu->qt);
+    return QVariant::fromValue(static_cast<QObject*>(menu));
+}
+
+}
+}

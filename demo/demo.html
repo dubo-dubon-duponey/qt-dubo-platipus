@@ -2,83 +2,32 @@
     <head>
         <meta charset="utf8" />
         <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
-        <script>
-        window.addEventListener("roxee", function(e){
-            // Display library information
-            var disp = e.API.root;
-            var iNode = document.getElementById("info");
-            var list = ["NAME", "VENDOR", "VERSION", "REVISION", "CHANGESET", "BUILD", "LINK", "QT", "PLUGIN_NAME", "PLUGIN_VERSION", "PLUGIN_REVISION"];
-
-            list.forEach(function(i){
-                var line = document.createElement("div");
-                line.appendChild(document.createTextNode(i + ": " + disp[i]));
-                iNode.appendChild(line)
-            });
-
-            // Power manager API
-            var setState = function(){
-                var ps = document.getElementById('powermanagerState');
-                var state;
-                switch(e.API.powerManager.state){
-                    case e.API.powerManager.NONE:
-                        state = "NONE";
-                    break;
-                    case e.API.powerManager.SYSTEM:
-                        state = "SYSTEM";
-                    break;
-                    case e.API.powerManager.SCREEN:
-                        state = "SCREEN";
-                    break;
-                }
-                ps.innerHTML = "Current state: " + state;
-            };
-
-            setState();
-
-            e.API.powerManager.stateChanged.connect(setState);
-
-            var rem = document.getElementById("powermanagerNONE");
-            rem.removeAttribute("disabled");
-            rem.onclick = function(){
-                e.API.powerManager.setState(e.API.powerManager.NONE, "Whatever reason to set to none!");
-            };
-
-            rem = document.getElementById("powermanagerSCREEN");
-            rem.removeAttribute("disabled");
-            rem.onclick = function(){
-                e.API.powerManager.setState(e.API.powerManager.SCREEN, "Whatever reason to set to screen!");
-            };
-
-            rem = document.getElementById("powermanagerSYSTEM");
-            rem.removeAttribute("disabled");
-            rem.onclick = function(){
-                e.API.powerManager.setState(e.API.powerManager.SYSTEM, "Whatever reason to set to system!");
-            };
-
-        });
-
-        window.addEventListener("load", function(){
-            new QWebChannel(qt.webChannelTransport, function(channel){
-                var e = new Event("roxee");
-                window.Dubo = window.Dubo || {};
-                e.API = window.Dubo["platipus"] = {
-                    root: channel.objects.Root,
-                    powerManager: channel.objects.PowerManager
-                };
-                window.dispatchEvent(e);
-            });
-        });
-
-
-        </script>
+        <script src="qrc:/demo.js"></script>
     </head>
     <body>
+        <div style="height: 30px; border: 1px solid red;" id="draggable"></div>
         <div id="info"></div>
         <div id="powermanager">
             <div id="powermanagerState"></div>
             <button id="powermanagerNONE" disabled="disabled">Do not prevent sleeping</button>
             <button id="powermanagerSYSTEM" disabled="disabled">Prevent system from sleeping</button>
             <button id="powermanagerSCREEN" disabled="disabled">Prevent screen from sleeping</button>
+        </div>
+        <div id="apputils">
+            <div id="apputilsDimensions"></div>
+            <input id="badgetext" type="text" value="∞ badge!" /><button id="dobadge" disabled="disabled">Do badge</button>
+            <button id="doannoy" disabled="disabled">Do annoy in five seconds (focus out meanwhile)</button>
+            <div id="FS"></div>
+            <div id="MV"></div>
+            <div id="SH"></div>
+            <div id="AL"></div>
+            <div id="shouldMinimizeOnDoubleClick"></div>
+            <div id="isDarkMode"></div>
+            <div id="accentColor"></div>
+            <button id="dofs" disabled="disabled">Toggle fullscreen</button>
+            <button id="domv" disabled="disabled">Toggle movable</button>
+            <button id="dosh" disabled="disabled">Toggle shadow</button>
+            <input id="alvalue" type="text" value="1" /><button id="doal" disabled="disabled">Set alpha</button>
         </div>
     </body>
 </html>

@@ -10,7 +10,7 @@
  */
 
 #include "libduboplatipus/lesserwindow.h"
-//#include <QDebug>
+#include <QDebug>
 #include <QDesktopWidget>
 #include <QApplication>
 #include <QRect>
@@ -51,8 +51,7 @@ namespace DuboPlatipus{
 //        DockIconClickEventHandler* handler;
 //};
 
-LesserWindow::LesserWindow(QWidget *parent)
-    : QWidget(parent)
+LesserWindow::LesserWindow(QWidget * window, QObject * parent): QObject(parent), m_window(window)
 {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
@@ -77,20 +76,19 @@ LesserWindow::LesserWindow(QWidget *parent)
     // SetMovable works for QT5, not QT4 - and it's unproven what happens before OSX Lion
     // Right now, the code is left in a state where it only works in QT5
     // And has lots of bugs (on release stopShit doesn't work outside of the view)
-    NSView *nsview = (NSView *) this->winId();
-    NSWindow *nswindow = [nsview window];
+    NSView * nsview = reinterpret_cast<NSView *>(m_window->winId());
     // Changing style mask
 //    if([nswindow respondsToSelector:@selector(toggleFullScreen:)]){
         // QT5 here
         // Lion get this
-        NSResponder *resp = [nswindow firstResponder];
+        NSResponder *resp = [[nsview window] firstResponder];
 //        NSUInteger masks = [nswindow styleMask];
 //        [nswindow setStyleMask: masks&~NSTitledWindowMask]; // NSBorderlessWindowMask|NSResizableWindowMask]; &NSTexturedBackgroundWindowMask
 //        [nswindow setStyleMask: NSTitledWindowMask|NSTexturedBackgroundWindowMask|NSResizableWindowMask]; // NSBorderlessWindowMask|NSResizableWindowMask]; &NSTexturedBackgroundWindowMask
-        [nswindow setStyleMask: NSTitledWindowMask|NSTexturedBackgroundWindowMask|NSClosableWindowMask|NSMiniaturizableWindowMask|NSResizableWindowMask]; // NSBorderlessWindowMask|NSResizableWindowMask]; &NSTexturedBackgroundWindowMask
-        [nswindow makeFirstResponder: resp];
-        [nswindow makeKeyAndOrderFront:nswindow];
-        [nswindow setMovableByWindowBackground: NO];
+        [[nsview window] setStyleMask: NSTitledWindowMask|NSTexturedBackgroundWindowMask|NSClosableWindowMask|NSMiniaturizableWindowMask|NSResizableWindowMask]; // NSBorderlessWindowMask|NSResizableWindowMask]; &NSTexturedBackgroundWindowMask
+        [[nsview window] makeFirstResponder: resp];
+        [[nsview window] makeKeyAndOrderFront:[nsview window]];
+        [[nsview window] setMovableByWindowBackground: NO];
 //        NSBorderlessWindowMask = 0,
 //        NSTitledWindowMask = 1 << 0,
 //        NSClosableWindowMask = 1 << 1,
@@ -120,82 +118,138 @@ LesserWindow::LesserWindow(QWidget *parent)
 //    delete d;
 //}
 
-void LesserWindow::startMovable()
+
+
+
+
+
+bool LesserWindow::moveable()
 {
-//    qDebug() << "Start movable";
-    NSView *nsview = (NSView *) this->winId();
-    NSWindow *nswindow = [nsview window];
-    [nswindow setMovableByWindowBackground: YES];
+    NSView * nsview = reinterpret_cast<NSView *>(m_window->winId());
+    return [[nsview window] isMovableByWindowBackground];
+
 }
 
-void LesserWindow::stopMovable()
+void LesserWindow::setMoveable(bool value)
 {
-//    qDebug() << "Stop movable";
-    NSView *nsview = (NSView *) this->winId();
-    NSWindow *nswindow = [nsview window];
-    [nswindow setMovableByWindowBackground: NO];
+    NSView * nsview = reinterpret_cast<NSView *>(m_window->winId());
+    [[nsview window] setMovableByWindowBackground: value];
+    emit updated();
 }
 
 
-// The reason for this is that QT is broken when it comes to maximize and/or n/ne/w resizing
+bool LesserWindow::shadow()
+{
+    NSView * nsview = reinterpret_cast<NSView *>(m_window->winId());
+    return [[nsview window] hasShadow];
+
+}
+
+void LesserWindow::setShadow(bool value)
+{
+    NSView * nsview = reinterpret_cast<NSView *>(m_window->winId());
+    [[nsview window] setHasShadow: value];
+    emit updated();
+}
+
+double LesserWindow::alpha()
+{
+    NSView * nsview = reinterpret_cast<NSView *>(m_window->winId());
+    return [[nsview window] alphaValue];
+
+}
+
+void LesserWindow::setAlpha(double value)
+{
+    NSView * nsview = reinterpret_cast<NSView *>(m_window->winId());
+    [[nsview window] setAlphaValue: value];
+    emit updated();
+}
+
+bool LesserWindow::fullscreen()
+{
+    NSView * nsview = reinterpret_cast<NSView *>(m_window->winId());
+    return [[nsview window] styleMask] & NSFullScreenWindowMask;
+}
+
+// XXX This is probably subtly broken as it's a toggler, not a setter...
+void LesserWindow::setFullscreen(bool value)
+{
+    NSView * nsview = reinterpret_cast<NSView *>(m_window->winId());
+    NSWindowCollectionBehavior behavior = [[nsview window] collectionBehavior];
+    behavior |= NSWindowCollectionBehaviorFullScreenPrimary;
+    [[nsview window] setCollectionBehavior:behavior];
+    [[nsview window] toggleFullScreen:nil];
+    [[nsview window] styleMask] & NSFullScreenWindowMask;
+    emit updated();
+}
+
+bool LesserWindow::shouldMinimizeOnDoubleClick()
+{
+    //Get settings from "System Preferences" >  "Appearance" > "Double-click on windows title bar to minimize"
+    return [[[NSUserDefaults standardUserDefaults] objectForKey:@"AppleMiniaturizeOnDoubleClick"] boolValue];
+}
+
+bool LesserWindow::isDarkMode()
+{
+    // XXX InterfaceStyleChanged to listen for changes
+    // Electron already deals with all that shit :)
+    return [[[NSUserDefaults standardUserDefaults] stringForKey:@"AppleInterfaceStyle"] isEqualToString:@"Dark"];
+}
+
+int LesserWindow::accentColor()
+{
+    // XXX AppleColorPreferencesChangedNotification to listen for changes
+    return [[[NSUserDefaults standardUserDefaults] objectForKey:@"AppleAccentColor"] intValue];
+/*
+nil: blue
+-1: graphite
+0: red
+1: orange
+2: yellow
+3: green
+5: purple
+6: pink
+*/
+}
+
+// XXX
+// Not super interesting or useful...
 int LesserWindow::x() const
 {
-    NSView *nsview = (NSView *) this->winId();
-    NSWindow *nswindow = [nsview window];
-    return static_cast<int>([nswindow frame].origin.x);
-}
-
-void LesserWindow::move(int x, int y)
-{
-    NSView *nsview = (NSView *) this->winId();
-//    int delta = [[NSScreen mainScreen] frame].size.height - [[NSScreen mainScreen] visibleFrame].size.height;
-//    if(delta > 0 && delta > y)
-//        y = delta;
-
-    NSWindow *nswindow = [nsview window];
-    NSPoint newPoint = NSMakePoint (x, [[NSScreen mainScreen] frame].size.height - y);
-
-//    qDebug() << "*******";
-//    qDebug() << this->x();
-//    qDebug() << newPoint.x;
-//    qDebug() << this->y();
-//    qDebug() << newPoint.y;
-
-    [nswindow setFrameTopLeftPoint: newPoint];
+    NSView * nsview = reinterpret_cast<NSView *>(m_window->winId());
+    return static_cast<int>([[nsview window] frame].origin.x);
 }
 
 int LesserWindow::y() const
 {
-    NSView *nsview = (NSView *) this->winId();
+    NSView * nsview = reinterpret_cast<NSView *>(m_window->winId());
     return static_cast<int>([[NSScreen mainScreen] frame].size.height - [[nsview window] frame].origin.y - [[nsview window] frame].size.height);
 }
 
-bool LesserWindow::minimizeOnDoubleClick() const
+void LesserWindow::moveTo(int x, int y)
 {
-    //Get settings from "System Preferences" >  "Appearance" > "Double-click on windows title bar to minimize"
-    NSString *const MDAppleMiniaturizeOnDoubleClickKey = @"AppleMiniaturizeOnDoubleClick";
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    [userDefaults addSuiteNamed:NSGlobalDomain];
-    return [[userDefaults objectForKey:MDAppleMiniaturizeOnDoubleClickKey] boolValue];
+    NSView * nsview = reinterpret_cast<NSView *>(m_window->winId());
+//    int delta = [[NSScreen mainScreen] frame].size.height - [[NSScreen mainScreen] visibleFrame].size.height;
+//    if(delta > 0 && delta > y)
+//        y = delta;
+
+    NSPoint newPoint = NSMakePoint (x, [[NSScreen mainScreen] frame].size.height - y);
+    [[nsview window] setFrameTopLeftPoint: newPoint];
+    emit updated();
 }
 
+
+
+/*
 bool LesserWindow::hasNaturalStyle() const
 {
     NSString * const kAppleAquaColorVariant = @"AppleAquaColorVariant";
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    [userDefaults addSuiteNamed:NSGlobalDomain];
     NSNumber *color = [userDefaults objectForKey:kAppleAquaColorVariant];
     // graphite is 6
     // acqua is 1
     return !([color intValue] == 6);
-}
-
-bool LesserWindow::needsResizer() const
-{
-    NSView *nsview = (NSView *) this->winId();
-    NSWindow *nswindow = [nsview window];
-    // Lion get this
-    return ![nswindow respondsToSelector:@selector(toggleFullScreen:)];
 }
 
 //bool LesserWindow::eventFilter(QObject * object, QEvent *event)
@@ -288,11 +342,6 @@ void LesserWindow::setGeometry(int x, int y, int w, int h)
 */
 
 }
-
-//int MainWidget::x()
-//{
-
-//}
 
 //void MainWidget::setGeometry(int x, int y, int w, int h)
 //{

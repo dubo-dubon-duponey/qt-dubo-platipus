@@ -57,7 +57,7 @@ uint PowerManager::getSystem()
     return OSPowerManager::SYSTEM;
 }
 
-uint PowerManager::getScreen()
+uint PowerManager::screen()
 {
     return OSPowerManager::SCREEN;
 }

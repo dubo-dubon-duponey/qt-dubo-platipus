@@ -17,36 +17,86 @@
 #include <AppKit/NSScreen.h>
 #include <Foundation/NSString.h>
 
-#include <QDebug>
+#include <QScreen>
+#include <QApplication>
+
+@interface DuboNotificationListener : NSObject {
+}
+
+  @property (atomic) DuboPlatipus::AppUtils* observer;
+- (DuboNotificationListener*) initialise:(DuboPlatipus::AppUtils*)observer;
+- (void) applicationDidChangeScreenParametersNotification:(NSNotification *) notification;
+@end
+
+@implementation DuboNotificationListener{
+}
+
+- (DuboNotificationListener*) initialise:(DuboPlatipus::AppUtils*)obs
+{
+    if ( (self = [super init]) )
+        self.observer = obs;
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidChangeScreenParametersNotification:) name:NSApplicationDidChangeScreenParametersNotification object:nil];
+    return self;
+}
+
+- (void) applicationDidChangeScreenParametersNotification:(NSNotification *) notification {
+    Q_UNUSED(notification);
+    self.observer->screenChanged();
+}
+
+@end
 
 namespace DuboPlatipus {
 
-void AppUtils::badgeMe(const QString &text)
+class AppUtils::Private
+{
+    public:
+        id listener;
+};
+
+AppUtils::AppUtils(QObject * parent): QObject(parent)
+{
+    d = new Private();
+    d->listener = [[DuboNotificationListener alloc] initialise: this];
+
+    // https://developer.apple.com/documentation/appkit/nswindowstylemask?language=objc
+
+    /*
+    NSWindowCollectionBehavior behavior = [nswindow collectionBehavior];
+    behavior |= NSWindowCollectionBehaviorFullScreenPrimary;
+    [nswindow setCollectionBehavior:behavior];
+    */
+
+    // [nswindow setStyleMask: NSClosableWindowMask | ! NSFullScreenWindowMask | NSTitledWindowMask | NSUnifiedTitleAndToolbarWindowMask | ! NSBorderlessWindowMask];
+
+    // NSTitledWindowMask | XXX not sure what that does
+    // NSClosableWindowMask |
+    // NSMiniaturizableWindowMask |
+    // NSFullScreenWindowMask |
+    // NSResizableWindowMask |
+    // NSTexturedBackgroundWindowMask | doesn't really do anything with webengine;
+    // NSFullSizeContentViewWindowMask |
+    // NSUnifiedTitleAndToolbarWindowMask | XXX not sure what this does
+    // NSBorderlessWindowMask
+}
+
+AppUtils::~AppUtils()
+{
+    delete d;
+}
+
+void AppUtils::screenChanged(){
+    emit updated();
+}
+
+void AppUtils::badge(const QString &text)
 {
     [[NSApp dockTile] setBadgeLabel:text.toNSString()];
 }
 
-void AppUtils::bitchMe()
+void AppUtils::annoy()
 {
     [NSApp requestUserAttention:NSCriticalRequest];
-}
-
-bool AppUtils::isFullScreen(QWidget * mainWindow)
-{
-    NSView * nsview = reinterpret_cast<NSView *>(mainWindow->winId());
-    NSWindow * nswindow = [nsview window];
-    return [nswindow styleMask] & NSFullScreenWindowMask;
-}
-
-bool AppUtils::fullscrenToggle(QWidget * mainWindow)
-{
-    NSView * nsview = reinterpret_cast<NSView *>(mainWindow->winId());
-    NSWindow * nswindow = [nsview window];
-    NSWindowCollectionBehavior behavior = [nswindow collectionBehavior];
-    behavior |= NSWindowCollectionBehaviorFullScreenPrimary;
-    [nswindow setCollectionBehavior:behavior];
-    [nswindow toggleFullScreen:nil];
-    return [nswindow styleMask] & NSFullScreenWindowMask;
 }
 
 int AppUtils::renderx()
@@ -59,14 +109,14 @@ int AppUtils::rendery()
     return static_cast<int>([[NSScreen mainScreen] visibleFrame].origin.y);
 }
 
-int AppUtils::renderw()
+uint AppUtils::renderw()
 {
-    return static_cast<int>([[NSScreen mainScreen] visibleFrame].size.width);
+    return static_cast<uint>([[NSScreen mainScreen] visibleFrame].size.width);
 }
 
-int AppUtils::renderh()
+uint AppUtils::renderh()
 {
-    return static_cast<int>([[NSScreen mainScreen] visibleFrame].size.height);
+    return static_cast<uint>([[NSScreen mainScreen] visibleFrame].size.height);
 }
 
 int AppUtils::screenx()
@@ -79,28 +129,17 @@ int AppUtils::screeny()
     return static_cast<int>([[NSScreen mainScreen] frame].origin.y);
 }
 
-int AppUtils::screenw()
+uint AppUtils::screenw()
 {
-    return static_cast<int>([[NSScreen mainScreen] frame].size.width);
+    return static_cast<uint>([[NSScreen mainScreen] frame].size.width);
 }
 
-int AppUtils::screenh()
+uint AppUtils::screenh()
 {
-    return static_cast<int>([[NSScreen mainScreen] frame].size.height);
+    return static_cast<uint>([[NSScreen mainScreen] frame].size.height);
 }
 
-
 }
-
-// XXX dispatch move event instead of setGeometry when moving window???
-// That stuff is interesting - we could ditch the js driven resize - BUT - for windows et all... :(
-//    [[NSApp mainWindow] setMovableByWindowBackground: YES];
-//    [[NSApp mainWindow] setStyleMask: NSClosableWindowMask|NSMiniaturizableWindowMask|NSResizableWindowMask];
-    // NSTexturedBackgroundWindowMask | NSResizableWindowMask | NSBorderlessWindowMask];
-    //    styleMask = NSBorderlessWindowMask | NSResizableWindowMask;
-    //    self = [super initWithContentRect:contentRect styleMask:styleMask
-    //                              backing:backingType defer:flag];
-    //    [self setMovableByWindowBackground: YES];
 
 // Flip spaces / workspace / desktop:
 // http://developer.apple.com/library/mac/#documentation/Cocoa/Reference/ApplicationKit/Classes/NSWindow_Class/Reference/Reference.html
@@ -120,11 +159,8 @@ int AppUtils::screenh()
 //    CGSMoveWorkspaceWindowList(connection, winId, 1, newSpaceNumber);
 //}
 
-// Not sure this is doable while still supporting 10.6? Check what VLC does?
 // Native Lion fullscreen
 // http://comments.gmane.org/gmane.comp.lib.qt.qt5-feedback/584
 // https://bugreports.qt-project.org/browse/QTBUG-22043
-
-
 
 // https://developer.apple.com/library/mac/#DOCUMENTATION/Carbon/Conceptual/customizing_docktile/docktasks_cocoa/docktasks_cocoa.html

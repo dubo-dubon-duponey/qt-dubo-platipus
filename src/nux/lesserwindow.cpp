@@ -20,53 +20,47 @@
 
 namespace DuboPlatipus{
 
-
-LesserWindow::LesserWindow(QWidget *parent)
-    : QWidget(parent)
+LesserWindow::LesserWindow(QWidget * window, QObject * parent): QObject(parent), m_window(window)
 {
-//    this->setWindowFlags(Qt::FramelessWindowHint);//  | Qt::WindowSystemMenuHint);
 }
 
 // The reason for this is that QT is broken when it comes to maximize and/or n/ne/w resizing
 int LesserWindow::x() const
 {
-    return QWidget::x();
+    return m_window->x();
 }
 
 int LesserWindow::y() const
 {
-    return QWidget::y();
+    return m_window->y();
 }
 
-bool LesserWindow::minimizeOnDoubleClick() const
+bool LesserWindow::fullscreen()
+{
+    return m_window->isFullScreen();
+}
+
+void LesserWindow::setFullscreen(bool value)
+{
+    if(!m_window->isFullScreen()){
+        m_window->showFullScreen();
+    }
+    else if(m_window->isMaximized())
+        m_window->showMaximized();
+    else
+        m_window->showNormal();
+}
+
+
+bool LesserWindow::shouldMinimizeOnDoubleClick()
 {
     return true;
 }
 
-bool LesserWindow::hasNaturalStyle() const
+void LesserWindow::moveTo(int x, int y)
 {
-    return true;
-}
-
-bool LesserWindow::needsResizer() const
-{
-    return true;
-}
-
-void LesserWindow::startMovable()
-{
+    return m_window->setGeometry(x, y, m_window->width(), m_window->height());
 
 }
-
-void LesserWindow::stopMovable()
-{
-
-}
-
-void LesserWindow::move(int /*x*/, int /*y*/)
-{
-
-}
-
 
 }
