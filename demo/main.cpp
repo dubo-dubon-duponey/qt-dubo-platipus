@@ -53,10 +53,10 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
 
     // Display the webview
-    QFileInfo jsFileInfo(QDir::currentPath() + "/qwebchannel.js");
+    QFileInfo jsFileInfo(QDir::currentPath() + QString::fromLatin1("/qwebchannel.js"));
 
     if (!jsFileInfo.exists())
-        QFile::copy(":/qtwebchannel/qwebchannel.js", jsFileInfo.absoluteFilePath());
+        QFile::copy(QString::fromLatin1(":/qtwebchannel/qwebchannel.js"), jsFileInfo.absoluteFilePath());
 
     QtWebEngine::initialize();
     QWebEngineView * view = new QWebEngineView();
@@ -73,14 +73,14 @@ int main(int argc, char *argv[])
     DuboPlatipus::UI::MenuBar * mb = new DuboPlatipus::UI::MenuBar(view);
     DuboPlatipus::UI::Tray * tray = new DuboPlatipus::UI::Tray(view);
 
-    chan->registerObject("Root", root);
-    chan->registerObject("PowerManager", b);
-    chan->registerObject("AppUtils", au);
-    chan->registerObject("Window", lw);
-    chan->registerObject("MenuBar", mb);
-    chan->registerObject("Tray", tray);
+    chan->registerObject(QString::fromLatin1("Root"), root);
+    chan->registerObject(QString::fromLatin1("PowerManager"), b);
+    chan->registerObject(QString::fromLatin1("AppUtils"), au);
+    chan->registerObject(QString::fromLatin1("Window"), lw);
+    chan->registerObject(QString::fromLatin1("MenuBar"), mb);
+    chan->registerObject(QString::fromLatin1("Tray"), tray);
 
-    view->load(QUrl("qrc:/demo.html"));
+    view->load(QUrl(QString::fromLatin1("qrc:/demo.html")));
     view->show();
 
     DuboPlatipus::MediaKeys * d = new DuboPlatipus::MediaKeys(view);

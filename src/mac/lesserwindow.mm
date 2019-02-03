@@ -127,7 +127,6 @@ bool LesserWindow::moveable()
 {
     NSView * nsview = reinterpret_cast<NSView *>(m_window->winId());
     return [[nsview window] isMovableByWindowBackground];
-
 }
 
 void LesserWindow::setMoveable(bool value)
@@ -137,12 +136,10 @@ void LesserWindow::setMoveable(bool value)
     emit updated();
 }
 
-
 bool LesserWindow::shadow()
 {
     NSView * nsview = reinterpret_cast<NSView *>(m_window->winId());
     return [[nsview window] hasShadow];
-
 }
 
 void LesserWindow::setShadow(bool value)
@@ -179,8 +176,9 @@ void LesserWindow::setFullscreen(bool value)
     NSWindowCollectionBehavior behavior = [[nsview window] collectionBehavior];
     behavior |= NSWindowCollectionBehaviorFullScreenPrimary;
     [[nsview window] setCollectionBehavior:behavior];
+    if (value == ([[nsview window] styleMask] & NSFullScreenWindowMask))
+        return;
     [[nsview window] toggleFullScreen:nil];
-    [[nsview window] styleMask] & NSFullScreenWindowMask;
     emit updated();
 }
 
@@ -296,6 +294,7 @@ bool LesserWindow::hasNaturalStyle() const
 //    NSRect f = [nswindow frame];
 //    [nsview setFrame: NSMakeRect(0, -5, f.size.width, f.size.height + 50)];
 //}
+*/
 
 /*
 void LesserWindow::setGeometry(int x, int y, int w, int h)

@@ -6,24 +6,6 @@ include($$PROJECT_ROOT/config/qmakeitup.pri)
 
 INCLUDEPATH += $$PWD
 
-DEFINES += LIBDUBOPLATIPUS_LIBRARY
-contains(DUBO_LINK_TYPE, static){
-    DEFINES += LIBDUBOPLATIPUS_USE_STATIC
-}
-
-copyToDestdir($$PWD/lib$${TARGET}/*.h, $$DESTDIR/../include/lib$${TARGET})
-copyToDestdir($$PWD/../res/redist/*, $$DESTDIR/../share/lib$${TARGET})
-
-SOURCES +=  $$PWD/root.cpp\
-            $$PWD/meanerwindow.cpp \
-            $$PWD/powermanager.cpp \
-            $$PWD/icon.cpp \
-            $$PWD/tray.cpp \
-            $$PWD/menu.cpp \
-            $$PWD/menubar.cpp \
-            $$PWD/action.cpp
-
-
 HEADERS +=  $$PWD/lib$${TARGET}/global.h \
             $$PWD/lib$${TARGET}/root.h \
             $$PWD/lib$${TARGET}/lesserwindow.h \
@@ -38,6 +20,15 @@ HEADERS +=  $$PWD/lib$${TARGET}/global.h \
             $$PWD/lib$${TARGET}/menubar.h \
             $$PWD/lib$${TARGET}/action.h \
             $$PWD/ospowermanager.h
+
+SOURCES +=  $$PWD/root.cpp\
+            $$PWD/meanerwindow.cpp \
+            $$PWD/powermanager.cpp \
+            $$PWD/icon.cpp \
+            $$PWD/tray.cpp \
+            $$PWD/menu.cpp \
+            $$PWD/menubar.cpp \
+            $$PWD/action.cpp
 
 win32{
 #    INCLUDEPATH += $$PWD/win

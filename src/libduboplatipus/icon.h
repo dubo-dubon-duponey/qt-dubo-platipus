@@ -33,7 +33,7 @@ public:
          );
     }
 
-    Q_PROPERTY(QString  URI    READ getIcon WRITE setIcon  NOTIFY updated)
+    Q_PROPERTY(QString  URI    READ getURI WRITE setURI  NOTIFY updated)
 
     QPixmap * internalIcon = new QPixmap();
 
@@ -51,14 +51,14 @@ private slots:
 private:
     QNetworkAccessManager netManager;
 
-    QString getIcon() const {
+    QString getURI() const {
         QByteArray byteArray;
         QBuffer buffer(&byteArray);
         internalIcon->save(&buffer, "PNG");
-        return QString("data:image/png;base64,") + byteArray.toBase64();
+        return QString::fromLatin1("data:image/png;base64,") + QString::fromLatin1(byteArray.toBase64());
     }
 
-    void setIcon(const QString url) {
+    void setURI(const QString url) {
         netManager.get(QNetworkRequest(url));
     }
 
