@@ -42,7 +42,6 @@ bool MeanerWindow::eventFilter(QObject * object, QEvent *event)
         // This is meant to be reforwarded to another widget
         emit outboundMouse((QMouseEvent *) event);
         return true;
-        break;
     case QEvent::WindowActivate:
         m_window->setMouseTracking(true);
         emit activated();
