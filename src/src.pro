@@ -14,21 +14,11 @@ HEADERS +=  $$PWD/lib$${TARGET}/global.h \
             $$PWD/lib$${TARGET}/merguez.h \
             $$PWD/lib$${TARGET}/mediakeys.h \
             $$PWD/lib$${TARGET}/powermanager.h \
-            $$PWD/lib$${TARGET}/icon.h \
-            $$PWD/lib$${TARGET}/tray.h \
-            $$PWD/lib$${TARGET}/menu.h \
-            $$PWD/lib$${TARGET}/menubar.h \
-            $$PWD/lib$${TARGET}/action.h \
             $$PWD/ospowermanager.h
 
 SOURCES +=  $$PWD/root.cpp\
             $$PWD/meanerwindow.cpp \
-            $$PWD/powermanager.cpp \
-            $$PWD/icon.cpp \
-            $$PWD/tray.cpp \
-            $$PWD/menu.cpp \
-            $$PWD/menubar.cpp \
-            $$PWD/action.cpp
+            $$PWD/powermanager.cpp
 
 win32{
 #    INCLUDEPATH += $$PWD/win

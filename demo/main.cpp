@@ -70,15 +70,10 @@ int main(int argc, char *argv[])
     DuboPlatipus::AppUtils * au = new DuboPlatipus::AppUtils(view);
     DuboPlatipus::LesserWindow * lw = new DuboPlatipus::LesserWindow(view, view);
 
-    DuboPlatipus::UI::MenuBar * mb = new DuboPlatipus::UI::MenuBar(view);
-    DuboPlatipus::UI::Tray * tray = new DuboPlatipus::UI::Tray(view);
-
     chan->registerObject(QString::fromLatin1("Root"), root);
     chan->registerObject(QString::fromLatin1("PowerManager"), b);
     chan->registerObject(QString::fromLatin1("AppUtils"), au);
     chan->registerObject(QString::fromLatin1("Window"), lw);
-    chan->registerObject(QString::fromLatin1("MenuBar"), mb);
-    chan->registerObject(QString::fromLatin1("Tray"), tray);
 
     view->load(QUrl(QString::fromLatin1("qrc:/demo.html")));
     view->show();
