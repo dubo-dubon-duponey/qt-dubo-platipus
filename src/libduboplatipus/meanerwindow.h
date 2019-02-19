@@ -69,6 +69,8 @@ signals:
     void outboundMouse(QMouseEvent * e);
 //    void outboundKey(QKeyEvent * e);
     void windowStateChanged();
+    // XXX Older versions of QT do not support signal inheritance... so... this here...
+    void updated();
 
 protected:
 
