@@ -19,8 +19,6 @@
 #include <libduboplatipus/root.h>
 #include <libduboplatipus/apputils.h>
 #include <libduboplatipus/lesserwindow.h>
-#include <libduboplatipus/menubar.h>
-#include <libduboplatipus/tray.h>
 #include <libduboplatipus/mediakeys.h>
 #include <libduboplatipus/merguez.h>
 #include <libduboplatipus/powermanager.h>
