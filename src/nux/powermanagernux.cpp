@@ -21,10 +21,8 @@
 PowerManagerNux::PowerManagerNux(QObject *parent) :
     OSPowerManager(parent)
 {
-    qDebug() << " [M/Nux] System/PowerManager: constructor";
     if(!QDBusConnection::sessionBus().isConnected())
     {
-        qDebug("D-Bus: Could not connect to session bus");
         m_state = error;
     }
     else
@@ -39,7 +37,6 @@ PowerManagerNux::PowerManagerNux(QObject *parent) :
 
 void PowerManagerNux::setState(uint dobusy, const QString &/* reason*/)
 {
-    qDebug() << " [M/Nux] System/PowerManager: set new state";
     if(m_busy == dobusy){
         return;
     }
@@ -96,7 +93,6 @@ void PowerManagerNux::OnAsyncReply(QDBusPendingCallWatcher *call)
         else
         {
             m_state = idle;
-            qDebug("D-Bus: PowerManagerInhibitor: Request successful");
             if (m_intended_state == busy)
                 this->setState(1, QString::fromLatin1(""));
         }

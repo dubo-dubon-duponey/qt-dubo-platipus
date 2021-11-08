@@ -35,6 +35,7 @@
 {
     if ( (self = [super init]) )
         self.observer = obs;
+    // Posted when the configuration of the displays attached to the computer is changed.
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidChangeScreenParametersNotification:) name:NSApplicationDidChangeScreenParametersNotification object:nil];
     return self;
 }

@@ -11,12 +11,11 @@
 
 #include "powermanagermac.h"
 
-#include <QDebug>
+// #include <QDebug>
 
 PowerManagerMac::PowerManagerMac(QObject *parent) :
     OSPowerManager(parent), m_assertionID(0)
 {
-    qDebug() << " [M/Mac]System/PowerManager: constructor";
     //    @param master_device_port  Just pass in MACH_PORT_NULL for master device port.
     //    @result Returns a io_connect_t handle on the root domain. Must be released with IOServiceClose() when done.
     m_connectIO = IOPMFindPowerManagement( MACH_PORT_NULL );
@@ -24,7 +23,6 @@ PowerManagerMac::PowerManagerMac(QObject *parent) :
 
 PowerManagerMac::~PowerManagerMac()
 {
-    qDebug() << " [M/Mac] System/PowerManager: destructor";
     IOServiceClose(m_connectIO);
     if(m_assertionID){
         IOPMAssertionRelease(m_assertionID);
@@ -34,7 +32,6 @@ PowerManagerMac::~PowerManagerMac()
 
 void PowerManagerMac::setState(const uint busy, const QString & reason)
 {
-    qDebug() << " [M/Mac] System/PowerManager: set new state";
     if(m_busy == busy){
         return;
     }
@@ -63,10 +60,10 @@ void PowerManagerMac::setState(const uint busy, const QString & reason)
     }
     if(success != kIOReturnSuccess){
         m_busy = OSPowerManager::NONE;
-        qDebug() << " [M/Mac] System/PowerManager: FAILED setting new state";
+        // qDebug() << " [M/Mac] System/PowerManager: FAILED setting new state";
     }else{
         m_busy = busy;
-        qDebug() << " [M/Mac] Did set power manager to" << busy;
+        // qDebug() << " [M/Mac] Did set power manager to" << busy;
     }
 }
 

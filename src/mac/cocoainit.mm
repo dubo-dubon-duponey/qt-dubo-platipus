@@ -10,7 +10,6 @@
  */
 
 #include <AppKit/AppKit.h>
-#include <QDebug>
 
 #include "cocoainit.h"
 
@@ -22,14 +21,12 @@ class CocoaInitializer::Private
 
 CocoaInitializer::CocoaInitializer()
 {
-    qDebug() << "     +++ [Lib] {Platipus}: cocoa initializer";
     d = new CocoaInitializer::Private();
 	d->autoReleasePool = [[NSAutoreleasePool alloc] init];
 }
 
 CocoaInitializer::~CocoaInitializer()
 {
-    qDebug() << "     +++ [Lib] {Platipus}: cocoa release";
     [d->autoReleasePool release];
 	delete d;
 }

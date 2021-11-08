@@ -25,7 +25,6 @@ class LIBDUBOPLATIPUSSHARED_EXPORT OSPowerManager : public QObject
 public:
     explicit OSPowerManager(QObject * parent = nullptr): QObject(parent), m_busy(0)
     {
-        qDebug() << " [M] Base System/PowerManager: constructor";
     }
 
     static const uint NONE = 0;
@@ -34,7 +33,6 @@ public:
 
     uint getState()
     {
-        qDebug() << " [M] PowerManager: query state" << m_busy;
         return m_busy;
     }
 

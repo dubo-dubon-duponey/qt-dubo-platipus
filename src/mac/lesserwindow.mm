@@ -85,7 +85,10 @@ LesserWindow::LesserWindow(QWidget * window, QObject * parent): QObject(parent),
 //        NSUInteger masks = [nswindow styleMask];
 //        [nswindow setStyleMask: masks&~NSTitledWindowMask]; // NSBorderlessWindowMask|NSResizableWindowMask]; &NSTexturedBackgroundWindowMask
 //        [nswindow setStyleMask: NSTitledWindowMask|NSTexturedBackgroundWindowMask|NSResizableWindowMask]; // NSBorderlessWindowMask|NSResizableWindowMask]; &NSTexturedBackgroundWindowMask
-        [[nsview window] setStyleMask: NSTitledWindowMask|NSTexturedBackgroundWindowMask|NSClosableWindowMask|NSMiniaturizableWindowMask|NSResizableWindowMask]; // NSBorderlessWindowMask|NSResizableWindowMask]; &NSTexturedBackgroundWindowMask
+
+//        [[nsview window] setStyleMask: NSTitledWindowMask|NSTexturedBackgroundWindowMask|NSClosableWindowMask|NSMiniaturizableWindowMask|NSResizableWindowMask]; // NSBorderlessWindowMask|NSResizableWindowMask]; &NSTexturedBackgroundWindowMask
+        [[nsview window] setStyleMask: NSWindowStyleMaskTitled|NSWindowStyleMaskTexturedBackground|NSWindowStyleMaskClosable|NSWindowStyleMaskMiniaturizable|NSWindowStyleMaskResizable]; // NSBorderlessWindowMask|
+
         [[nsview window] makeFirstResponder: resp];
         [[nsview window] makeKeyAndOrderFront:[nsview window]];
         [[nsview window] setMovableByWindowBackground: NO];
@@ -166,7 +169,7 @@ void LesserWindow::setAlpha(double value)
 bool LesserWindow::fullscreen()
 {
     NSView * nsview = reinterpret_cast<NSView *>(m_window->winId());
-    return [[nsview window] styleMask] & NSFullScreenWindowMask;
+    return [[nsview window] styleMask] & NSWindowStyleMaskFullScreen;
 }
 
 // XXX This is probably subtly broken as it's a toggler, not a setter...
@@ -176,7 +179,7 @@ void LesserWindow::setFullscreen(bool value)
     NSWindowCollectionBehavior behavior = [[nsview window] collectionBehavior];
     behavior |= NSWindowCollectionBehaviorFullScreenPrimary;
     [[nsview window] setCollectionBehavior:behavior];
-    if (value == ([[nsview window] styleMask] & NSFullScreenWindowMask))
+    if (value == ([[nsview window] styleMask] & NSWindowStyleMaskFullScreen))
         return;
     [[nsview window] toggleFullScreen:nil];
     emit updated();

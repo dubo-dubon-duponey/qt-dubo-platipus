@@ -17,12 +17,10 @@
 PowerManagerWindows::PowerManagerWindows(QObject *parent) :
     OSPowerManager(parent)
 {
-    qDebug() << " [M/Win] System/PowerManager: constructor";
 }
 
 void PowerManagerWindows::setState(const uint busy, const QString & /*reason*/)
 {
-    qDebug() << " [M/Win] System/PowerManager: set new state";
     if(m_busy == busy){
         return;
     }

@@ -38,7 +38,6 @@ PowerManager::PowerManager(QObject * parent): QObject(parent)
 #elif defined(Q_OS_UNIX) && defined(Q_DBUS_EXPORT)
     d->pm = new PowerManagerNux(this);
 #endif
-    qDebug() << " [M] PowerManager: constructor";
 }
 
 uint PowerManager::getState()

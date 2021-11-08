@@ -14,7 +14,6 @@
 #include <QHBoxLayout>
 #include <QTimer>
 #include <QDebug>
-#include <QStandardPaths>
 
 #include <libduboplatipus/root.h>
 #include <libduboplatipus/apputils.h>
@@ -45,10 +44,9 @@ void OutputLibraryInfo(){
     qDebug() << root->property("PLUGIN_REVISION");
 }
 
+
 int main(int argc, char *argv[])
 {
-    // Get your app going
-    QApplication app(argc, argv);
 
     // Display the webview
     QFileInfo jsFileInfo(QDir::currentPath() + QString::fromLatin1("/qwebchannel.js"));
@@ -57,6 +55,9 @@ int main(int argc, char *argv[])
         QFile::copy(QString::fromLatin1(":/qtwebchannel/qwebchannel.js"), jsFileInfo.absoluteFilePath());
 
     QtWebEngine::initialize();
+    // Get your app going
+    QApplication app(argc, argv);
+
     QWebEngineView * view = new QWebEngineView();
 
     QWebChannel * chan = new QWebChannel(view->page());
@@ -79,7 +80,8 @@ int main(int argc, char *argv[])
     DuboPlatipus::MediaKeys * d = new DuboPlatipus::MediaKeys(view);
     DuboPlatipus::RemoteMerguez * e = new DuboPlatipus::RemoteMerguez(view);
 
-    qDebug() << QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
+    d->hello(1, 1, true);
+    e->hello(1, true);
 
     return app.exec();
 }
