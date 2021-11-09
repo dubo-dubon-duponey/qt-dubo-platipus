@@ -48,15 +48,15 @@ void OutputLibraryInfo(){
 int main(int argc, char *argv[])
 {
 
-    // Display the webview
+    QtWebEngine::initialize();
+
+    // Get your app going
+    QApplication app(argc, argv);
+
     QFileInfo jsFileInfo(QDir::currentPath() + QString::fromLatin1("/qwebchannel.js"));
 
     if (!jsFileInfo.exists())
         QFile::copy(QString::fromLatin1(":/qtwebchannel/qwebchannel.js"), jsFileInfo.absoluteFilePath());
-
-    QtWebEngine::initialize();
-    // Get your app going
-    QApplication app(argc, argv);
 
     QWebEngineView * view = new QWebEngineView();
 
