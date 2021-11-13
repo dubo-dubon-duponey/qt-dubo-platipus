@@ -16,8 +16,7 @@ OSX:
 - media keys support
 - apple remote support
 - Lion fullscreen (fallback on regular if not available)
-- some QT4/QT5 migration quirks
-- zeroconf support
+- some QT version migration quirks
 - power management support
 
 All:
@@ -34,3 +33,5 @@ Licensed under BSD2.
 
 Test (specifically powermanagement).
 Cleanup old hacks.
+
+Draggable is bust with QT6

@@ -22,7 +22,9 @@
 #include <libduboplatipus/merguez.h>
 #include <libduboplatipus/powermanager.h>
 
+#if QT_VERSION < QT_VERSION_CHECK( 6, 0, 0 )
 #include <QtWebEngine>
+#endif
 #include <QWebEngineView>
 #include <QWebEnginePage>
 #include <QFileInfo>
@@ -47,8 +49,9 @@ void OutputLibraryInfo(){
 
 int main(int argc, char *argv[])
 {
-
+#if QT_VERSION < QT_VERSION_CHECK( 6, 0, 0 )
     QtWebEngine::initialize();
+#endif
 
     // Get your app going
     QApplication app(argc, argv);

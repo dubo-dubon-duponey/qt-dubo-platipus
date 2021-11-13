@@ -11,13 +11,12 @@
 
 #include "libduboplatipus/lesserwindow.h"
 #include <QDebug>
-#include <QDesktopWidget>
 #include <QApplication>
 #include <QRect>
 //#include <AppKit/NSDockTile.h>
 #include <AppKit/NSApplication.h>
 #include <QApplication>
-#include <QDesktopWidget>
+// #include <QDesktopWidget>
 #include <Cocoa/Cocoa.h>
 #include <AppKit/NSWindow.h>
 #include <AppKit/NSUserDefaultsController.h>

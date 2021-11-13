@@ -1,5 +1,8 @@
 TEMPLATE = app
-QT = core widgets webengine webenginewidgets webchannel
+QT = core widgets webenginewidgets webchannel
+isEqual(QT_MAJOR_VERSION, 5) {
+    QT += webengine
+}
 
 PROJECT_ROOT = $$PWD/..
 include($$PROJECT_ROOT/config/qmakeitup.pri)
